@@ -1,0 +1,1 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/01/30 - 16:15:04.223	[31merror[0m	/Users/yuyuehao/Documents/code/gin-vue-admin/server/api/v1/system/sys_initdb.go:34	自动创建数据库失败!	{"error": "dial tcp 125.25.172.211:3306: connect: operation timed out"}

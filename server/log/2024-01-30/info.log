@@ -1,0 +1,4 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/01/30 - 15:32:11.154	[34minfo[0m	/Users/yuyuehao/Documents/code/gin-vue-admin/server/initialize/router.go:49	register swagger handler
+[github.com/flipped-aurora/gin-vue-admin/server]2024/01/30 - 15:32:11.169	[34minfo[0m	/Users/yuyuehao/Documents/code/gin-vue-admin/server/initialize/router.go:85	router register success
+[github.com/flipped-aurora/gin-vue-admin/server]2024/01/30 - 15:32:11.170	[34minfo[0m	/Users/yuyuehao/Documents/code/gin-vue-admin/server/core/server.go:41	server run success on 	{"address": ":8888"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/01/30 - 16:13:24.721	[34minfo[0m	/Users/yuyuehao/Documents/code/gin-vue-admin/server/api/v1/system/sys_initdb.go:57	前往初始化数据库

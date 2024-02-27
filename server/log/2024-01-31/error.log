@@ -1,0 +1,3 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/01/31 - 13:35:06.543	[31merror[0m	/Users/yuyuehao/Documents/code/gin-vue-admin/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "invalid connection"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/01/31 - 13:35:36.546	[31merror[0m	/Users/yuyuehao/Documents/code/gin-vue-admin/server/api/v1/system/sys_user.go:437	获取失败!	{"error": "invalid connection"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/01/31 - 14:42:30.733	[31merror[0m	/Users/yuyuehao/Documents/code/gin-vue-admin/server/plugin/email/api/sys_email.go:24	发送失败!	{"error": "550 User has no permission"}
