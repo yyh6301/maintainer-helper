@@ -1,0 +1,4 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/12 - 11:12:44.765	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/12 - 11:16:46.426	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/api/v1/cmdb/workflow_template.go:23	获取工作流模板列表失败!	{"err": "bad connection"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/12 - 11:16:46.472	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/12 - 13:04:46.872	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "invalid connection"}

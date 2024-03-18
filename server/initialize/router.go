@@ -6,7 +6,6 @@ import (
 
 	"github.com/flipped-aurora/gin-vue-admin/server/docs"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
-	"github.com/flipped-aurora/gin-vue-admin/server/middleware"
 	"github.com/flipped-aurora/gin-vue-admin/server/router"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -30,6 +29,7 @@ func Routers() *gin.Engine {
 	InstallPlugin(Router) // 安装插件
 	systemRouter := router.RouterGroupApp.System
 	exampleRouter := router.RouterGroupApp.Example
+	cmdbRouter := router.RouterGroupApp.Cmdb
 	// 如果想要不使用nginx代理前端网页，可以修改 web/.env.production 下的
 	// VUE_APP_BASE_API = /
 	// VUE_APP_BASE_PATH = http://localhost
@@ -61,8 +61,10 @@ func Routers() *gin.Engine {
 		systemRouter.InitInitRouter(PublicGroup) // 自动初始化相关
 	}
 	PrivateGroup := Router.Group(global.GVA_CONFIG.System.RouterPrefix)
-	PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
+	//PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
 	{
+		cmdbRouter.InitWorkFlowRouter(PrivateGroup)
+		cmdbRouter.InitAssetsManageRouter(PrivateGroup)             // 注册资产管理路由 q
 		systemRouter.InitApiRouter(PrivateGroup, PublicGroup)       // 注册功能api路由
 		systemRouter.InitJwtRouter(PrivateGroup)                    // jwt相关路由
 		systemRouter.InitUserRouter(PrivateGroup)                   // 注册用户路由

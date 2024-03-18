@@ -1,0 +1,9 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/11 - 12:14:18.002	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/11 - 13:59:56.173	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "invalid connection"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/11 - 14:35:37.140	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/11 - 15:05:13.874	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/11 - 15:06:54.123	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/11 - 15:08:02.543	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/11 - 15:11:18.287	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/11 - 15:11:37.378	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/03/11 - 15:12:51.412	[31merror[0m	/Users/yuyuehao/Documents/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection

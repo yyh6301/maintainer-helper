@@ -6,43 +6,16 @@
         :inline="true"
         :model="searchInfo"
       >
-        <el-form-item
-          style="width: 20%;"
-          label="云厂商"
-        >
-          <!-- <el-input
-            v-model="searchInfo.CloudType"
-            placeholder="云厂商"
-          /> -->
-          <el-select
-            v-model="searchInfo.CloudType"
-            placeholder="云厂商"
-            clearable
-          >
-            <el-option
-              v-for="item in cloudTypeList"
-              :key="item.value"
-              :label="item.value"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="实例名称">
+        <el-form-item label="流程名称">
           <el-input
-            v-model="searchInfo.InstanceName"
-            placeholder="实例名称"
+            v-model="searchInfo.flowName"
+            placeholder="流程名称"
           />
         </el-form-item>
-        <el-form-item label="公网IP">
+        <el-form-item label="流程类型">
           <el-input
-            v-model="searchInfo.PublicIP"
-            placeholder="公网IP"
-          />
-        </el-form-item>
-        <el-form-item label="私网IP">
-          <el-input
-            v-model="searchInfo.PrivateIP"
-            placeholder="私网IP"
+            v-model="searchInfo.flowType"
+            placeholder="流程类型"
           />
         </el-form-item>
         <el-form-item>
@@ -59,6 +32,11 @@
       </el-form>
     </div>
     <div class="gva-table-box">
+      <el-button
+        type="primary"
+        icon="plus"
+        @click="handleAdd"
+      >新建模版</el-button>
       <el-table
         :data="tableData"
         @selection-change="handleSelectionChange"
@@ -76,34 +54,53 @@
 
         <el-table-column
           align="left"
-          label="实例名称"
+          label="流程名称"
           min-width="100"
-          prop="instanceName"
+          prop="flowName"
         />
         <el-table-column
           align="left"
-          label="实例类型"
+          label="流程类型"
           min-width="100"
-          prop="instanceType"
+          prop="flowType"
         />
         <el-table-column
           align="left"
-          label="公网IP"
+          label="流程创建人"
           min-width="100"
-          prop="publicIP"
+          prop="flowCreator"
         />
         <el-table-column
           align="left"
-          label="私网IP"
+          label="流程修改人"
           min-width="100"
-          prop="privateIP"
+          prop="flowModifier"
         />
         <el-table-column
           align="left"
-          label="云厂商"
-          min-width="100"
-          prop="cloudType"
-        />
+          fixed="right"
+          label="操作"
+          width="200"
+        >
+          <template #default="scope">
+            <el-button
+              icon="edit"
+              type="primary"
+              link
+              @click="handleEdit(scope.row)"
+            >
+              详情
+            </el-button>
+            <el-button
+              icon="delete"
+              type="primary"
+              link
+              @click="handleDelete(scope.row)"
+            >
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="gva-pagination">
         <el-pagination
@@ -122,42 +119,40 @@
 
 <script setup>
 import {
-  getAssetsList,
-} from '@/api/cmdb'
+  getWorkflowTemplateList,
+} from '@/api/workflow'
+
+import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+
 // import { ElMessage, ElMessageBox } from 'element-plus'
 
+const router = useRouter()
+
 defineOptions({
-  name: 'Assets',
+  name: 'WorkflowTemplate',
 })
 
-const form = ref({
-  CloudType: '',
-  InstanceID: '',
-  InstanceName: '',
-  InstanceType: '',
-  PublicIP: '',
-  PrivateIP: '',
-})
+// const form = ref({
+//   flowName: '',
+//   flowType: '',
+//   flowDetail: '',
+//   flowCreator: '',
+//   flowModifier: ''
+// })
 
-const rules = ref({
-  // path: [{ required: true, message: '请输入api路径', trigger: 'blur' }],
-  // apiGroup: [
-  //   { required: true, message: '请输入组名称', trigger: 'blur' }
-  // ],
-  // method: [
-  //   { required: true, message: '请选择请求方式', trigger: 'blur' }
-  // ],
-  // description: [
-  //   { required: true, message: '请输入api介绍', trigger: 'blur' }
-  // ]
-})
-
-const cloudTypeList = ref([
-  { value: '阿里云' },
-  { value: '腾讯云' },
-  { value: 'AWS' },
-])
+// const rules = ref({
+//   // path: [{ required: true, message: '请输入api路径', trigger: 'blur' }],
+//   // apiGroup: [
+//   //   { required: true, message: '请输入组名称', trigger: 'blur' }
+//   // ],
+//   // method: [
+//   //   { required: true, message: '请选择请求方式', trigger: 'blur' }
+//   // ],
+//   // description: [
+//   //   { required: true, message: '请输入api介绍', trigger: 'blur' }
+//   // ]
+// })
 
 const page = ref(1)
 const total = ref(0)
@@ -175,7 +170,7 @@ const onSubmit = () => {
   getTableData()
 }
 
-// 分页
+// // 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
   getTableData()
@@ -188,7 +183,8 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async() => {
-  const table = await getAssetsList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+  const table = await getWorkflowTemplateList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -199,10 +195,14 @@ const getTableData = async() => {
 
 getTableData()
 
+const handleAdd = () => {
+  router.push({ name: 'templateDetail' })
+}
+
 </script>
 
-<style scoped lang="scss">
-.warning {
-  color: #dc143c;
-}
-</style>
+  <style scoped lang="scss">
+  .warning {
+    color: #dc143c;
+  }
+  </style>

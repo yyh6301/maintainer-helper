@@ -172,14 +172,12 @@
           <template #default="scope">
             <el-button
               icon="edit"
-
               type="primary"
               link
               @click="editApiFunc(scope.row)"
             >编辑</el-button>
             <el-button
               icon="delete"
-
               type="primary"
               link
               @click="deleteApiFunc(scope.row)"

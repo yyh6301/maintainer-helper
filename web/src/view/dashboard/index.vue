@@ -43,24 +43,6 @@
               </div>
             </el-col>
           </el-row>
-          <div>
-            <div class="gva-top-card-left-item">
-              使用教学：
-              <a
-                style="color:#409EFF"
-                target="view_window"
-                href="https://www.bilibili.com/video/BV1Rg411u7xH/"
-              >https://www.bilibili.com/video/BV1Rg411u7xH</a>
-            </div>
-            <div class="gva-top-card-left-item">
-              插件仓库：
-              <a
-                style="color:#409EFF"
-                target="view_window"
-                href="https://plugin.maintainer-helper.com/#/layout/home"
-              >https://plugin.maintainer-helper.com</a>
-            </div>
-          </div>
         </div>
         <img
           src="@/assets/dashboard.png"
@@ -99,33 +81,10 @@
         </el-row>
       </div>
     </div>
-    <div class="gva-card-box">
-      <div class="gva-card">
-        <div class="gva-card-title">数据统计</div>
-        <div class="p-4">
-          <el-row :gutter="20">
-            <el-col
-              :xs="24"
-              :sm="18"
-            >
-              <echarts-line />
-            </el-col>
-            <el-col
-              :xs="24"
-              :sm="6"
-            >
-              <dashboard-table />
-            </el-col>
-          </el-row>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup>
-import EchartsLine from '@/view/dashboard/dashboardCharts/echartsLine.vue'
-import DashboardTable from '@/view/dashboard/dashboardTable/dashboardTable.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useWeatherInfo } from '@/view/dashboard/weather.js'
@@ -138,16 +97,16 @@ const weatherInfo = useWeatherInfo()
 
 const toolCards = ref([
   {
-    label: '用户管理',
+    label: '云资源查询',
     icon: 'monitor',
-    name: 'user',
+    name: 'assets',
     color: '#ff9c6e',
     bg: 'rgba(255, 156, 110,.3)'
   },
   {
-    label: '角色管理',
+    label: '工单管理',
     icon: 'setting',
-    name: 'authority',
+    name: 'workflowOrder',
     color: '#69c0ff',
     bg: 'rgba(105, 192, 255,.3)'
   },
@@ -159,23 +118,23 @@ const toolCards = ref([
     bg: 'rgba(179, 127, 235,.3)'
   },
   {
-    label: '代码生成器',
+    label: '用户管理',
     icon: 'cpu',
-    name: 'autoCode',
+    name: 'user',
     color: '#ffd666',
     bg: 'rgba(255, 214, 102,.3)'
   },
   {
-    label: '表单生成器',
+    label: '主机监控',
     icon: 'document-checked',
     name: 'formCreate',
     color: '#ff85c0',
     bg: 'rgba(255, 133, 192,.3)'
   },
   {
-    label: '关于我们',
+    label: '操作记录',
     icon: 'user',
-    name: 'about',
+    name: 'operation',
     color: '#5cdbd3',
     bg: 'rgba(92, 219, 211,.3)'
   }
