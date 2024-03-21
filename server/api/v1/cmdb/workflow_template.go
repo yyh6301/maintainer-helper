@@ -40,5 +40,4 @@ func (a *WorkFlowTemplateApi) UpdateWorkFlowTemplate() {
 }
 
 func (a *WorkFlowTemplateApi) DeleteWorkFlowTemplate() {
-
 }

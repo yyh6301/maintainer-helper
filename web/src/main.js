@@ -13,7 +13,11 @@ import run from '@/core/maintainer-helper.js'
 import auth from '@/directive/auth'
 import { store } from '@/pinia'
 import App from './App.vue'
+
 import { initDom } from './utils/positionToCode'
+
+import VForm3 from 'vform3-builds' // 引入VForm3库
+import 'vform3-builds/dist/designer.style.css' // 引入VForm3样式
 
 initDom()
 /**
@@ -37,6 +41,7 @@ app
   .use(store)
   .use(auth)
   .use(router)
+  .use(VForm3)
   .mount('#app')
 
 export default app
