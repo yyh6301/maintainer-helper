@@ -16,4 +16,5 @@ var (
 	OldAuthorityVerify     = Rules{"OldAuthorityId": {NotEmpty()}}
 	ChangePasswordVerify   = Rules{"Password": {NotEmpty()}, "NewPassword": {NotEmpty()}}
 	SetUserAuthorityVerify = Rules{"AuthorityId": {NotEmpty()}}
+	WorkFlowTemplateVerify = Rules{"FlowName": {NotEmpty()}, "FlowDesc": {NotEmpty()}}
 )

@@ -4,12 +4,12 @@ import "github.com/flipped-aurora/gin-vue-admin/server/global"
 
 type WorkFlowTemplate struct {
 	global.GVA_MODEL
-	FlowName     string `json:"flowName" gorm:"comment:流程名称"`
-	FlowType     string `json:"flowType" gorm:"comment:流程类型"`
-	FlowDetail   string `json:"flowDetail" gorm:"type:json;comment:流程详情"`
-	FlowVersion  string `json:"flowVersion" gorm:"comment:流程版本"`
-	FlowCreator  string `json:"flowCreator" gorm:"comment:流程创建者"`
-	FlowModifier string `json:"flowModifier" gorm:"comment:流程修改者"`
+	FlowName       string `json:"flowName" gorm:"comment:流程名称"`
+	FlowDesc       string `json:"flowDesc" gorm:"comment:流程描述"`
+	FlowDetail     string `json:"flowDetail" gorm:"type:json;comment:流程详情"`
+	FlowFormDetail string `json:"flowFormDetail" gorm:"type:json;comment:流程表单详情"`
+	FlowCreator    string `json:"flowCreator" gorm:"comment:流程创建者"`
+	FlowModifier   string `json:"flowModifier" gorm:"comment:流程修改者"`
 }
 
 type WorkFlowOrder struct {

@@ -1,40 +1,159 @@
 <template>
-  <div>
-    <v-form-designer
-      ref="vfDesigner"
-      :field-list-api="fieldListApi"
-      :banned-widgets="testBanned"
-      :designer-config="designerConfig"
-    >
-      <!-- 自定义按钮插槽演示 -->
-      <template #customToolButtons>
-        <el-button
-          type="text"
-          @click="saveFormJson"
-        >保存</el-button>
-      </template>
-    </v-form-designer>
-  </div>
+  <div id="app">
+    <el-tabs type="border-card">
+      <el-tab-pane label="基本信息">
+        <el-form :model="form">
+          <div style="display:flex">
+            <el-form-item label="工作流名称">
+              <el-input
+                v-model="form.flowName"
+                placeholder="请输入工作流名称"
+              />
+            </el-form-item>
+            <el-form-item
+              label="流程描述"
+              style="margin-left:20%;
+              width:60%;"
+            >
+              <el-input
+                v-model="form.flowDesc"
+                placeholder="请输入流程描述"
+              />
+            </el-form-item>
+          </div>
+          <el-form-item>
+            <el-button
+              type="primary"
+              size="default"
+              style=""
+              @click="submitTemplate"
+            >
+              确认
+            </el-button>
+          </el-form-item>
+          {{ form }}
 
+          {{ route.query?.id }}
+
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="工作流流转">Config</el-tab-pane>
+      <el-tab-pane label="自定义表单">
+
+        <v-form-designer
+          ref="vfDesigner"
+          :banned-widgets="testBanned"
+          :designer-config="designerConfig"
+        >
+          <!-- 自定义按钮插槽演示 -->
+          <template #customToolButtons>
+            <el-button
+              type="text"
+              @click="saveFormJson"
+            >保存</el-button>
+          </template>
+        </v-form-designer>
+      </el-tab-pane>
+
+    </el-tabs>
+
+  </div>
 </template>
 
 <script setup>
-const vfDesigner = ref(null)
-const fieldListApi = reactive({
-  URL: 'https://www.fastmock.site/mock/2de212e0dc4b8e0885fea44ab9f2e1d0/vform/listField',
-  labelKey: 'fieldLabel',
-  nameKey: 'fieldName'
+import { ref, reactive, onMounted, nextTick } from 'vue'
+import { ElMessage } from 'element-plus'
+import {
+  createWorkflowTemplate,
+  getWorkflowTemplateById,
+  updateWorkflowTemplate,
+} from '@/api/workflow'
+import { useRouter, useRoute } from 'vue-router'
+import { useUserStore } from '@/pinia/modules/user'
+import { VFormDesigner } from 'vform3-builds'
+const userStore = useUserStore()
+const router = useRouter()
+const route = useRoute()
+
+var isCreate = route.query.id === undefined
+
+// 工作流基本信息
+const form = ref({
+  flowName: '',
+  flowDesc: '',
+  flowFormDetail: '',
+  flowDetail: '',
+  flowCreator: '',
+  flowModifier: ''
 })
+
+onMounted(async() => {
+  vfDesigner.value.setFormJson({})
+  if (!isCreate) {
+    var id = Number(route.query.id)
+    const res = await getWorkflowTemplateById({ ID: id })
+    if (res.code === 0) {
+      form.value = res.data
+      nextTick(() => {
+        vfDesigner.value.setFormJson(form.value.flowFormDetail)
+      })
+    }
+  }
+})
+
+const submitTemplate = async() => {
+  form.value.flowFormDetail = JSON.stringify(vfDesigner.value.getFormJson())
+  form.value.flowDetail = JSON.stringify('{"test": "test"}')
+
+  if (isCreate) {
+    // 新增工作流
+    form.value.flowCreator = userStore.userInfo.nickName
+    form.value.flowModifier = userStore.userInfo.nickName
+    const res = await createWorkflowTemplate(form.value)
+    if (res.code === 0) {
+      ElMessage.success('新增工作流模板成功')
+      // todo 这里设置清除但无效，需要调试
+      nextTick(() => {
+        vfDesigner.value.setFormJson('')
+      })
+      router.push({ name: 'template' })
+    }
+  } else {
+    // 更改工作流
+    form.value.flowModifier = userStore.userInfo.nickName
+    const res = await updateWorkflowTemplate(form.value)
+    if (res.code === 0) {
+      ElMessage.success('更新工作流模板成功')
+      // nextTick(() => {
+      //   vfDesigner.value.setFormJson('')
+      // })
+      router.replace({ name: 'template' })
+    }
+  }
+}
+
+// ========表单设计=======
+const vfDesigner = ref(null)
+// const fieldListApi = reactive({
+//   URL: 'https://www.fastmock.site/mock/2de212e0dc4b8e0885fea44ab9f2e1d0/vform/listField',
+//   labelKey: 'fieldLabel',
+//   nameKey: 'fieldName'
+// })
 const testBanned = ref([
   // 'sub-form',
   // 'alert',
 ])
 const designerConfig = reactive({
   languageMenu: true,
-  // externalLink: false,
-  // formTemplates: false,
-  // eventCollapse: false,
-  // clearDesignerButton: false,
+  externalLink: false,
+  formTemplates: true,
+  eventCollapse: true,
+  toolbarMaxWidth: 250,
+  exportCodeButton: false,
+  exportJsonButton: false,
+  importJsonButton: false,
+  generateSFCButton: false,
+  // clearDesignerButton: true,
   // previewFormButton: false,
 
   // presetCssCode: '.abc { font-size: 16px; }',
@@ -42,10 +161,14 @@ const designerConfig = reactive({
 
 const saveFormJson = () => {
   const formJson = vfDesigner.value.getFormJson()
+  console.log('formJson', formJson)
   // TODO: 将formJson提交给后端保存接口，需自行实现！！
   ElMessage.success('表单已保存！')
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+  #app {
+    height: 100%;
+  }
 </style>

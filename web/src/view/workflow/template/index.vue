@@ -60,9 +60,9 @@
         />
         <el-table-column
           align="left"
-          label="流程类型"
+          label="流程描述"
           min-width="100"
-          prop="flowType"
+          prop="flowDesc"
         />
         <el-table-column
           align="left"
@@ -120,10 +120,12 @@
 <script setup>
 import {
   getWorkflowTemplateList,
+  deleteWorkflowTemplate,
 } from '@/api/workflow'
 
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { ElMessageBox, ElMessage } from 'element-plus'
 
 // import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -135,7 +137,8 @@ defineOptions({
 
 // const form = ref({
 //   flowName: '',
-//   flowType: '',
+//   flowDesc: '',
+//   flowFormDetail: '',
 //   flowDetail: '',
 //   flowCreator: '',
 //   flowModifier: ''
@@ -196,7 +199,35 @@ const getTableData = async() => {
 getTableData()
 
 const handleAdd = () => {
-  router.push({ name: 'templateDetail' })
+  router.replace({ name: 'templateDetail' })
+}
+
+const handleEdit = (row) => {
+  router.replace({
+    name: 'templateDetail',
+    query: { id: row.ID }
+  })
+}
+
+const handleDelete = (row) => {
+  ElMessageBox.confirm('是否删除该工作流模板?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(async() => {
+      const res = await deleteWorkflowTemplate(row)
+      if (res.code === 0) {
+        ElMessage({
+          type: 'success',
+          message: '删除成功!'
+        })
+        if (tableData.value.length === 1 && page.value > 1) {
+          page.value--
+        }
+        getTableData()
+      }
+    })
 }
 
 </script>

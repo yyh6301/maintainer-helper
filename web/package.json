@@ -21,6 +21,7 @@
         "core-js": "^3.31.1",
         "echarts": "5.4.3",
         "element-plus": "^2.3.8",
+        "form-making": "^1.2.13",
         "highlight.js": "^11.8.0",
         "js-cookie": "^3.0.5",
         "marked": "4.3.0",

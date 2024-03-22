@@ -135,7 +135,7 @@
     <el-drawer
       v-if="drawer"
       v-model="drawer"
-      custom-class="auth-drawer"
+      class="auth-drawer"
       :with-header="false"
       size="40%"
       title="角色配置"
