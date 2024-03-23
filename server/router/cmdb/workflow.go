@@ -17,8 +17,19 @@ func (a *WorkFlowRouter) InitWorkFlowRouter(Router *gin.RouterGroup) {
 		workFlowRouter.POST("updateTemplate", workflowTemplateApi.UpdateWorkFlowTemplate)   // 更新工作流模板
 		workFlowRouter.DELETE("deleteTemplate", workflowTemplateApi.DeleteWorkFlowTemplate) // 删除工作流模板
 		workFlowRouter.POST("getTemplateById", workflowTemplateApi.GetWorkFlowTemplateById)
-		//workFlowRouter.POST("createTemplate")
-		//workFlowRouter.POST("updateTemplate")
-		//workFlowRouter.POST("deleteTemplate")
+
+		// 流程状态
+		workFlowRouter.GET("getStatusList", workflowTemplateApi.GetTemplateStatus)
+		workFlowRouter.POST("createStatus", workflowTemplateApi.CreateTemplateStatus)
+		workFlowRouter.POST("updateStatus", workflowTemplateApi.UpdateTemplateStatus)
+		workFlowRouter.DELETE("deleteStatus", workflowTemplateApi.DeleteTemplateStatus)
+		workFlowRouter.POST("getStatusById", workflowTemplateApi.GetTemplateStatusById)
+
+		// 流程流转
+		workFlowRouter.GET("getCircleList", workflowTemplateApi.GetCircleList)
+		workFlowRouter.POST("createCircle", workflowTemplateApi.CreateCircle)
+		workFlowRouter.POST("updateCircle", workflowTemplateApi.UpdateCircle)
+		workFlowRouter.DELETE("deleteCircle", workflowTemplateApi.DeleteCircle)
+		workFlowRouter.POST("getCircleById", workflowTemplateApi.GetCircleById)
 	}
 }

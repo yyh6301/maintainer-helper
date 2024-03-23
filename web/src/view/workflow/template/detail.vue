@@ -1,6 +1,18 @@
 <template>
   <div id="app">
+    <el-tag
+      v-if="route.query.name === undefined"
+      style="margin-bottom:10px;"
+    > 创建工单模板</el-tag>
+    <el-tag
+      v-else
+      style="margin-bottom: 10px;"
+    >
+      来自工单模板 - {{ route.query?.name }}
+    </el-tag>
+
     <el-tabs type="border-card">
+      <!-- ===============================基本信息============================= -->
       <el-tab-pane label="基本信息">
         <el-form :model="form">
           <div style="display:flex">
@@ -31,13 +43,10 @@
               确认
             </el-button>
           </el-form-item>
-          {{ form }}
-
-          {{ route.query?.id }}
-
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="工作流流转">Config</el-tab-pane>
+
+      <!-- ===============================自定义表单============================= -->
       <el-tab-pane label="自定义表单">
 
         <v-form-designer
@@ -45,14 +54,23 @@
           :banned-widgets="testBanned"
           :designer-config="designerConfig"
         >
-          <!-- 自定义按钮插槽演示 -->
-          <template #customToolButtons>
-            <el-button
-              type="text"
-              @click="saveFormJson"
-            >保存</el-button>
-          </template>
+          <!-- 自定义按钮插槽演示
+                <template #customToolButtons>
+                  <el-button
+                    type="text"
+                    @click="saveFormJson"
+                  >保存</el-button>
+                </template> -->
         </v-form-designer>
+      </el-tab-pane>
+
+      <!-- ===============================状态============================= -->
+      <el-tab-pane label="状态">
+        <FlowStatus :templateid="route.query.id" />
+      </el-tab-pane>
+      <!-- ===============================流转============================= -->
+      <el-tab-pane label="流转">
+        <FlowCircle :templateid="route.query.id" />
       </el-tab-pane>
 
     </el-tabs>
@@ -71,13 +89,16 @@ import {
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/pinia/modules/user'
 import { VFormDesigner } from 'vform3-builds'
+import FlowStatus from '@/view/workflow/template/component/flowStatus.vue'
+import FlowCircle from '@/view/workflow/template/component/flowCircle.vue'
 const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
 
 var isCreate = route.query.id === undefined
+var nullJson = '{"formConfig": {"size": "", "cssCode": "", "refName": "vForm", "functions": "", "modelName": "formData", "rulesName": "rules", "labelAlign": "label-left-align", "labelWidth": 80, "layoutType": "PC", "customClass": [], "jsonVersion": 3, "labelPosition": "left", "onFormCreated": "", "onFormMounted": "", "onFormDataChange": ""}, "widgetList": []}'
 
-// 工作流基本信息
+// ============工作流基本信息========
 const form = ref({
   flowName: '',
   flowDesc: '',
@@ -88,7 +109,7 @@ const form = ref({
 })
 
 onMounted(async() => {
-  vfDesigner.value.setFormJson({})
+  vfDesigner.value.setFormJson(nullJson)
   if (!isCreate) {
     var id = Number(route.query.id)
     const res = await getWorkflowTemplateById({ ID: id })
@@ -112,10 +133,6 @@ const submitTemplate = async() => {
     const res = await createWorkflowTemplate(form.value)
     if (res.code === 0) {
       ElMessage.success('新增工作流模板成功')
-      // todo 这里设置清除但无效，需要调试
-      nextTick(() => {
-        vfDesigner.value.setFormJson('')
-      })
       router.push({ name: 'template' })
     }
   } else {
@@ -124,9 +141,6 @@ const submitTemplate = async() => {
     const res = await updateWorkflowTemplate(form.value)
     if (res.code === 0) {
       ElMessage.success('更新工作流模板成功')
-      // nextTick(() => {
-      //   vfDesigner.value.setFormJson('')
-      // })
       router.replace({ name: 'template' })
     }
   }
@@ -150,8 +164,8 @@ const designerConfig = reactive({
   eventCollapse: true,
   toolbarMaxWidth: 250,
   exportCodeButton: false,
-  exportJsonButton: false,
-  importJsonButton: false,
+  exportJsonButton: true,
+  importJsonButton: true,
   generateSFCButton: false,
   // clearDesignerButton: true,
   // previewFormButton: false,
@@ -159,12 +173,6 @@ const designerConfig = reactive({
   // presetCssCode: '.abc { font-size: 16px; }',
 })
 
-const saveFormJson = () => {
-  const formJson = vfDesigner.value.getFormJson()
-  console.log('formJson', formJson)
-  // TODO: 将formJson提交给后端保存接口，需自行实现！！
-  ElMessage.success('表单已保存！')
-}
 </script>
 
 <style lang="scss">

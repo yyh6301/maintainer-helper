@@ -32,6 +32,8 @@ func RegisterTables() {
 		cmdb.CloudAssets{},
 		cmdb.WorkFlowOrder{},
 		cmdb.WorkFlowTemplate{},
+		cmdb.WorkFlowStatus{},
+		cmdb.WorkFlowCircle{},
 		//system.SysApi{},
 		//system.SysUser{},
 		//system.SysBaseMenu{},

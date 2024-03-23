@@ -17,4 +17,6 @@ var (
 	ChangePasswordVerify   = Rules{"Password": {NotEmpty()}, "NewPassword": {NotEmpty()}}
 	SetUserAuthorityVerify = Rules{"AuthorityId": {NotEmpty()}}
 	WorkFlowTemplateVerify = Rules{"FlowName": {NotEmpty()}, "FlowDesc": {NotEmpty()}}
+	WorkFlowStatusVerify   = Rules{"StatusName": {NotEmpty()}}
+	WorkFlowCircleVerify   = Rules{"CircleName": {NotEmpty()},"TemplateID":{NotEmpty()}
 )

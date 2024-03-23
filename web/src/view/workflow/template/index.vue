@@ -205,7 +205,10 @@ const handleAdd = () => {
 const handleEdit = (row) => {
   router.replace({
     name: 'templateDetail',
-    query: { id: row.ID }
+    query: {
+      id: row.ID,
+      name: row.flowName
+    }
   })
 }
 

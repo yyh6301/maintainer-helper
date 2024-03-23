@@ -10,6 +10,16 @@ type SearchWorkFlowTemplateParams struct {
 	request.PageInfo
 }
 
+type SearchTemplateStatusParams struct {
+	cmdb.WorkFlowStatus
+	request.PageInfo
+}
+
+type SearchCircleParams struct {
+	cmdb.WorkFlowCircle
+	request.PageInfo
+}
+
 type SearchWorkFlowOrderParams struct {
 	cmdb.WorkFlowOrder
 	request.PageInfo
