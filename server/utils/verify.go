@@ -18,5 +18,6 @@ var (
 	SetUserAuthorityVerify = Rules{"AuthorityId": {NotEmpty()}}
 	WorkFlowTemplateVerify = Rules{"FlowName": {NotEmpty()}, "FlowDesc": {NotEmpty()}}
 	WorkFlowStatusVerify   = Rules{"StatusName": {NotEmpty()}}
-	WorkFlowCircleVerify   = Rules{"CircleName": {NotEmpty()},"TemplateID":{NotEmpty()}
+	WorkFlowCircleVerify   = Rules{"CircleName": {NotEmpty()}, "TemplateID": {NotEmpty()}}
+	OrderVerify            = Rules{"Title": {NotEmpty()}, "TemplateID": {NotEmpty()}}
 )

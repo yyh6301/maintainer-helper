@@ -5,4 +5,5 @@ type ServiceGroup struct {
 	AssetsApplyService
 	AssetsRecycleService
 	WorkFlowTemplateService
+	WorkFlowOrderService
 }

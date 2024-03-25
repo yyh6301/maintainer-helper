@@ -119,3 +119,27 @@ export const getCircleById = (data) => {
     data: data,
   })
 }
+
+export const getOrderList = (params) => {
+  return service({
+    url: '/workflow/getOrderList',
+    method: 'get',
+    params: params
+  })
+}
+
+export const getOrderDetail = (data) => {
+  return service({
+    url: '/workflow/getOrderDetailById',
+    method: 'post',
+    data: data
+  })
+}
+
+export const createWorkflowOrder = (data) => {
+  return service({
+    url: '/workflow/createOrder',
+    method: 'post',
+    data: data,
+  })
+}

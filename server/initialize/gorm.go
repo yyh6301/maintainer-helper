@@ -34,6 +34,7 @@ func RegisterTables() {
 		cmdb.WorkFlowTemplate{},
 		cmdb.WorkFlowStatus{},
 		cmdb.WorkFlowCircle{},
+		cmdb.WorkFlowOrderLog{},
 		//system.SysApi{},
 		//system.SysUser{},
 		//system.SysBaseMenu{},

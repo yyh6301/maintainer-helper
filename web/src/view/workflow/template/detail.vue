@@ -128,8 +128,8 @@ const submitTemplate = async() => {
 
   if (isCreate) {
     // 新增工作流
-    form.value.flowCreator = userStore.userInfo.nickName
-    form.value.flowModifier = userStore.userInfo.nickName
+    form.value.flowCreator = userStore.userInfo.userName
+    form.value.flowModifier = userStore.userInfo.userName
     const res = await createWorkflowTemplate(form.value)
     if (res.code === 0) {
       ElMessage.success('新增工作流模板成功')
@@ -137,7 +137,7 @@ const submitTemplate = async() => {
     }
   } else {
     // 更改工作流
-    form.value.flowModifier = userStore.userInfo.nickName
+    form.value.flowModifier = userStore.userInfo.userName
     const res = await updateWorkflowTemplate(form.value)
     if (res.code === 0) {
       ElMessage.success('更新工作流模板成功')

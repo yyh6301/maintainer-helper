@@ -15,6 +15,12 @@ type SearchTemplateStatusParams struct {
 	request.PageInfo
 }
 
+type SearchOrderParams struct {
+	cmdb.WorkFlowOrder
+	Handler string `json:"handler" form:"handler"`
+	request.PageInfo
+}
+
 type SearchCircleParams struct {
 	cmdb.WorkFlowCircle
 	request.PageInfo

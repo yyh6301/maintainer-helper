@@ -1,10 +1,8 @@
 <template>
   <div>
-    <h1>Order Create</h1>
+    云资源申请
   </div>
-
 </template>
 
 <script setup>
-
 </script>

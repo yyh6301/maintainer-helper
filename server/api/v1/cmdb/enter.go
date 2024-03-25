@@ -7,6 +7,7 @@ type ApiGroup struct {
 	AssetsApplyApi
 	AssetsRecycleApi
 	WorkFlowTemplateApi
+	WorkflowOrderApi
 }
 
 var (
@@ -14,4 +15,5 @@ var (
 	recycleService          = service.ServiceGroupApp.CmdbServiceGroup.AssetsRecycleService
 	applyService            = service.ServiceGroupApp.CmdbServiceGroup.AssetsApplyService
 	workflowTemplateService = service.ServiceGroupApp.CmdbServiceGroup.WorkFlowTemplateService
+	workflowOrderService    = service.ServiceGroupApp.CmdbServiceGroup.WorkFlowOrderService
 )

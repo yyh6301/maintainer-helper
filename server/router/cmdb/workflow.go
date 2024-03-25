@@ -32,4 +32,14 @@ func (a *WorkFlowRouter) InitWorkFlowRouter(Router *gin.RouterGroup) {
 		workFlowRouter.DELETE("deleteCircle", workflowTemplateApi.DeleteCircle)
 		workFlowRouter.POST("getCircleById", workflowTemplateApi.GetCircleById)
 	}
+
+	workflowOrderApi := v1.ApiGroupApp.CmdbApiGroup.WorkflowOrderApi
+	{
+		workFlowRouter.POST("createOrder", workflowOrderApi.CreateOrder)
+		workFlowRouter.GET("getOrderList", workflowOrderApi.GetOrderList)
+		workFlowRouter.POST("updateOrder", workflowOrderApi.UpdateOrder)
+		workFlowRouter.DELETE("deleteOrder", workflowOrderApi.DeleteOrder)
+		workFlowRouter.POST("getOrderDetailById", workflowOrderApi.GetOrderById)
+	}
+
 }

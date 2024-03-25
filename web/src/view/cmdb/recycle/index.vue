@@ -1,10 +1,8 @@
 <template>
   <div>
-    <h1>所有工单</h1>
+    云资源回收
   </div>
-
 </template>
 
 <script setup>
-
 </script>
