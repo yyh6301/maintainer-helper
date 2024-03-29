@@ -19,7 +19,7 @@ func (a *WorkflowOrderApi) GetOrderList(c *gin.Context) {
 		global.GVA_LOG.Error("获取查询参数失败!", zap.Any("err", err))
 		response.FailWithMessage("获取查询参数失败", c)
 	}
-	list, total, err := workflowOrderService.GetOrderList(pageInfo.WorkFlowOrder, pageInfo.Handler, pageInfo.PageInfo)
+	list, total, err := workflowOrderService.GetOrderList(pageInfo.WorkFlowOrder, pageInfo.Handler, pageInfo.Application, pageInfo.PageInfo)
 	if err != nil {
 		global.GVA_LOG.Error("获取所有工单列表失败!", zap.Any("err", err))
 		response.FailWithMessage("获取所有列表失败", c)
@@ -102,4 +102,19 @@ func (a *WorkflowOrderApi) GetOrderById(c *gin.Context) {
 		response.FailWithMessage("获取工作流模板失败", c)
 	}
 	response.OkWithDetailed(workflow, "获取工作流模板信息成功", c)
+}
+
+func (a *WorkflowOrderApi) HandleOrder(c *gin.Context) {
+	var order cmdbRequest.HandleOrderParams
+	err := c.ShouldBindJSON(&order)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+	}
+	err = workflowOrderService.HandleOrder(order.WorkFlowOrder, order.Handler, order.Opinion, order.Result)
+	if err != nil {
+		global.GVA_LOG.Error("处理失败!", zap.Error(err))
+		response.FailWithMessage("处理失败", c)
+		return
+	}
+	response.OkWithMessage("处理成功", c)
 }

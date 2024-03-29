@@ -40,6 +40,7 @@ func (a *WorkFlowRouter) InitWorkFlowRouter(Router *gin.RouterGroup) {
 		workFlowRouter.POST("updateOrder", workflowOrderApi.UpdateOrder)
 		workFlowRouter.DELETE("deleteOrder", workflowOrderApi.DeleteOrder)
 		workFlowRouter.POST("getOrderDetailById", workflowOrderApi.GetOrderById)
+		workFlowRouter.POST("handleOrder", workflowOrderApi.HandleOrder)
 	}
 
 }

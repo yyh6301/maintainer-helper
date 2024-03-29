@@ -53,6 +53,7 @@ type WorkFlowOrderLog struct {
 	TargetID   uint   `json:"targetID" gorm:"comment:目标环节ID" form:"targetID"`
 	Handler    string `json:"handler" gorm:"comment:流程处理人" form:"handler"`
 	Status     uint   `json:"status" gorm:"status:处理状态 0:未处理，1:同意，2:拒绝" form:"status"`
+	Opinion    string `json:"opinion" gorm:"comment:处理意见" form:"opinion"`
 }
 
 func (w *WorkFlowTemplate) TableName() string {

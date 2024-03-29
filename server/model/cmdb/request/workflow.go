@@ -17,8 +17,16 @@ type SearchTemplateStatusParams struct {
 
 type SearchOrderParams struct {
 	cmdb.WorkFlowOrder
-	Handler string `json:"handler" form:"handler"`
+	Handler     string `json:"handler" form:"handler"`
+	Application string `json:"application" form:"application"`
 	request.PageInfo
+}
+
+type HandleOrderParams struct {
+	cmdb.WorkFlowOrder
+	Opinion string `json:"opinion" form:"opinion"`
+	Handler string `json:"handler" form:"handler"`
+	Result  string `json:"result" form:"result"`
 }
 
 type SearchCircleParams struct {

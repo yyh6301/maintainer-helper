@@ -12,6 +12,16 @@ type WorkFlowTemplateService struct {
 }
 
 func (w WorkFlowTemplateService) CreateWorkFlowTemplate(workflow cmdb.WorkFlowTemplate) error {
+	if workflow.FlowDetail == "" {
+		defaultJSON := "{}" // 设置默认的空JSON字符串
+		workflow.FlowDetail = defaultJSON
+	}
+
+	if workflow.FlowFormDetail == "" {
+		defaultJSON := "{}" // 设置默认的空JSON字符串
+		workflow.FlowFormDetail = defaultJSON
+	}
+
 	if !errors.Is(global.GVA_DB.Where("flow_name = ? ", workflow.FlowName).First(&cmdb.WorkFlowTemplate{}).Error, gorm.ErrRecordNotFound) {
 		return errors.New("存在相同流程名称 ")
 	}
