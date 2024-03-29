@@ -6,16 +6,22 @@
         :inline="true"
         :model="searchInfo"
       >
-        <el-form-item label="流程名称">
+        <el-form-item label="云厂商">
           <el-input
-            v-model="searchInfo.flowName"
-            placeholder="流程名称"
+            v-model="searchInfo.cloudType"
+            placeholder="云厂商"
           />
         </el-form-item>
-        <el-form-item label="流程类型">
+        <el-form-item label="实例名">
           <el-input
-            v-model="searchInfo.flowType"
-            placeholder="流程类型"
+            v-model="searchInfo.instanceName"
+            placeholder="实例名"
+          />
+        </el-form-item>
+        <el-form-item label="实例类型">
+          <el-input
+            v-model="searchInfo.instanceType"
+            placeholder="实例类型"
           />
         </el-form-item>
         <el-form-item>
@@ -36,7 +42,7 @@
         type="primary"
         icon="plus"
         @click="handleAdd"
-      >新建申请</el-button>
+      >新建工单</el-button>
       <el-table
         :data="tableData"
         @selection-change="handleSelectionChange"
@@ -47,34 +53,40 @@
         />
         <el-table-column
           align="left"
-          label="id"
+          label="云厂商"
           min-width="60"
-          prop="ID"
+          prop="cloudType"
         />
 
         <el-table-column
           align="left"
-          label="客户名"
+          label="资源区域"
           min-width="100"
-          prop="clusterName"
+          prop="zone"
         />
         <el-table-column
           align="left"
-          label="厂商"
+          label="产品名"
           min-width="100"
-          prop="cloudType"
+          prop="productName"
         />
         <el-table-column
           align="left"
-          label="申请原因"
+          label="实例名"
           min-width="100"
-          prop="applyReason"
+          prop="instanceName"
         />
         <el-table-column
           align="left"
-          label="申请时间"
+          label="实例ID"
           min-width="100"
-          prop="createdAt"
+          prop="instanceId"
+        />
+        <el-table-column
+          align="left"
+          label="负责人"
+          min-width="100"
+          prop="owner"
         />
         <el-table-column
           align="left"
@@ -89,7 +101,15 @@
               link
               @click="handleEdit(scope.row)"
             >
-              查看工单详情
+              查看工单
+            </el-button>
+            <el-button
+              icon="edit"
+              type="primary"
+              link
+              @click="handleEdit(scope.row)"
+            >
+              编辑工单
             </el-button>
             <el-button
               icon="delete"
@@ -119,7 +139,7 @@
 
 <script setup>
 import {
-  getWorkflowTemplateList,
+  //   getWorkflowTemplateList,
   deleteWorkflowTemplate,
 } from '@/api/workflow'
 
@@ -197,60 +217,60 @@ const getTableData = async() => {
   tableData.value = [
     {
       ID: 1,
-      clusterName: '内部环境',
       cloudType: '阿里云',
-      applyReason: '申请原因1',
-      createdAt: '2021-09-01 12:00:00'
+      zone: '华北',
+      productName: 'ECS',
+      instanceName: 'test',
+      instanceId: 'i-123456',
+      owner: '张三',
     },
     {
       ID: 2,
-      clusterName: '新c',
       cloudType: '腾讯云',
-      applyReason: '申请原因2',
-      createdAt: '2021-09-02 12:00:00'
+      zone: '华南',
+      productName: 'CVM',
+      instanceName: 'test',
+      instanceId: 'i-123456',
+      owner: '李四',
     },
     {
       ID: 3,
-      clusterName: '公有云',
-      cloudType: '华为云',
-      applyReason: '申请原因3',
-      createdAt: '2021-09-03 12:00:00'
-    },
-    {
-      ID: 4,
-      clusterName: '测试环境',
       cloudType: '阿里云',
-      applyReason: '申请原因4',
-      createdAt: '2021-09-04 12:00:00'
+      zone: '华东',
+      productName: 'RDS',
+      instanceName: 'test',
+      instanceId: 'i-123456',
+      owner: '王五',
     },
-    {
-      ID: 5,
-      clusterName: '预发环境',
-      cloudType: '腾讯云',
-      applyReason: '申请原因5',
-      createdAt: '2021-09-05 12:00:00'
-    },
-    {
-      ID: 6,
-      clusterName: '集群6',
-      cloudType: '华为云',
-      applyReason: '申请原因6',
-      createdAt: '2021-09-06 12:00:00'
-    },
-    {
-      ID: 7,
-      clusterName: '集群7',
-      cloudType: '阿里云',
-      applyReason: '申请原因7',
-      createdAt: '2021-09-07 12:00:00'
-    },
-    {
-      ID: 8,
-      clusterName: '集群8',
-      cloudType: '腾讯云',
-      applyReason: '申请原因8',
-      createdAt: '2021-09-08 12:00:00'
-    }]
+  ]
+}
+
+const statusOptions = ref([
+  {
+    value: 0,
+    label: '未处理',
+    color: 'info',
+  },
+  {
+    value: 1,
+    label: '同意',
+    color: 'primary',
+  },
+  {
+    value: 2,
+    label: '拒绝',
+    color: 'danger',
+  }
+])
+
+const getStatusColor = (type) => {
+  const item = statusOptions.value.find(item => item.value === type)
+  return item ? item.color : ''
+}
+
+const getStatusLabel = (type) => {
+  const item = statusOptions.value.find(item => item.value === type)
+  return item ? item.label : ''
 }
 
 getTableData()
@@ -292,8 +312,8 @@ const handleDelete = (row) => {
 
 </script>
 
-    <style scoped lang="scss">
-    .warning {
-      color: #dc143c;
-    }
-    </style>
+      <style scoped lang="scss">
+      .warning {
+        color: #dc143c;
+      }
+      </style>

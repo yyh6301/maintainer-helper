@@ -84,7 +84,7 @@
           prop="CreatedAt"
         >
           <template #default="{ row }">
-            {{ beautifyTime(row.CreatedAt) }}
+            {{ formatDate(row.CreatedAt) }}
           </template>
         </el-table-column>
         <el-table-column
@@ -122,6 +122,7 @@ import {
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/pinia/modules/user'
+import { formatDate } from '@/utils/format.js'
 
 // import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -178,24 +179,6 @@ const getTableData = async() => {
 }
 
 getTableData()
-
-const beautifyTime = (timeString) => {
-  // 创建 Date 对象并解析时间字符串
-  const date = new Date(timeString)
-
-  // 获取年月日时分秒
-  const year = date.getFullYear()
-  const month = (date.getMonth() + 1).toString().padStart(2, '0')
-  const day = date.getDate().toString().padStart(2, '0')
-  const hours = date.getHours().toString().padStart(2, '0')
-  const minutes = date.getMinutes().toString().padStart(2, '0')
-  const seconds = date.getSeconds().toString().padStart(2, '0')
-
-  // 格式化时间字符串
-  const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-
-  return formattedTime
-}
 
 </script>
 

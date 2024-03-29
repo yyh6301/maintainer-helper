@@ -114,18 +114,65 @@
         />
       </div>
     </div>
+
+    <el-dialog
+      v-model="dialogFormVisible"
+      :before-close="closeDialog"
+      :title="dialogTitle"
+    >
+
+      <el-form
+        ref="templateForm"
+        :model="templateForm"
+        :rules="rules"
+        label-width="80px"
+      >
+        <el-form-item
+          label="流程名称"
+          prop="flowName"
+        >
+          <el-input
+            v-model="form.flowName"
+            autocomplete="off"
+            placeholder="请输入流程名称"
+          />
+        </el-form-item>
+        <el-form-item
+          label="流程描述"
+          prop="flowDesc"
+        >
+          <el-input
+            v-model="form.flowDesc"
+            placeholder="请输入流程描述"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="closeDialog">取 消</el-button>
+          <el-button
+            type="primary"
+            @click="enterDialog"
+          >确 定</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import {
   getWorkflowTemplateList,
+  createWorkflowTemplate,
   deleteWorkflowTemplate,
 } from '@/api/workflow'
 
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { useUserStore } from '@/pinia/modules/user'
 import { ElMessageBox, ElMessage } from 'element-plus'
+
+const userStore = useUserStore()
 
 // import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -198,8 +245,51 @@ const getTableData = async() => {
 
 getTableData()
 
+const dialogTitle = ref('新增状态')
+const dialogFormVisible = ref(false)
+const templateForm = ref(null)
+const form = ref({
+  flowName: '',
+  flowDesc: '',
+  flowFormDetail: '',
+  flowDetail: '',
+  flowCreator: '',
+  flowModifier: ''
+})
+
 const handleAdd = () => {
-  router.replace({ name: 'templateDetail' })
+  // router.replace({ name: 'templateDetail' })
+  dialogFormVisible.value = true
+}
+
+const closeDialog = () => {
+  dialogFormVisible.value = false
+  templateForm.value.resetFields()
+  form.value = {
+    flowName: '',
+    flowDesc: '',
+    flowFormDetail: '',
+    flowDetail: '',
+    flowCreator: '',
+    flowModifier: ''
+  }
+}
+
+const enterDialog = async() => {
+  templateForm.value.validate(async valid => {
+    if (valid) {
+      // 新增工作流
+      form.value.flowCreator = userStore.userInfo.userName
+      form.value.flowModifier = userStore.userInfo.userName
+
+      const res = await createWorkflowTemplate(form.value)
+      if (res.code === 0) {
+        ElMessage.success('新增工作流模板成功')
+      }
+      getTableData()
+      closeDialog()
+    }
+  })
 }
 
 const handleEdit = (row) => {

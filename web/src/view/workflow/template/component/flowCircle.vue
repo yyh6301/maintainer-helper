@@ -381,14 +381,14 @@ const getAttributeType = (type) => {
   return item ? item.color : ''
 }
 
-const getCircle = (type) => {
-  const item = CircleOptions.value.find(item => item.value === type)
-  return item ? item.label : ''
-}
-
 const getAttributeTypeLabel = (type) => {
   const item = AttributeTypeOptions.value.find(item => item.value === type)
   return item ? item.label : ''
+}
+
+const getCircle = (type) => {
+  const item = CircleOptions.value.find(item => item.value === type)
+  return item ? item.color : ''
 }
 
 const getCircleLabel = (type) => {

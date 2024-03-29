@@ -167,7 +167,7 @@ const handleDetail = (row) => {
 
 // 查询
 const getTableData = async() => {
-  searchInfo.value.applyer = userStore.userInfo.userName
+  searchInfo.value.application = userStore.userInfo.userName
   const table = await getOrderList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
   if (table.code === 0) {
     tableData.value = table.data.list
