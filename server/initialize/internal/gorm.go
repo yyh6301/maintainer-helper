@@ -55,9 +55,9 @@ func (g *_gorm) Config(prefix string, singular bool) *gorm.Config {
 	case "warn", "Warn":
 		config.Logger = _default.LogMode(logger.Warn)
 	case "info", "Info":
-		config.Logger = _default.LogMode(logger.Info)
+		config.Logger = logger.Default.LogMode(logger.Info)
 	default:
-		config.Logger = _default.LogMode(logger.Info)
+		config.Logger = logger.Default.LogMode(logger.Info)
 	}
 	return config
 }

@@ -1,0 +1,8 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/09 - 00:24:44.555	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "invalid connection"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/09 - 00:25:03.823	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_user.go:437	获取失败!	{"error": "invalid connection"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/09 - 00:25:30.482	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "invalid connection"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/09 - 10:07:08.868	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/09 - 10:07:13.883	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/09 - 10:09:35.905	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/09 - 10:12:22.450	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_template.go:221	获取工作流模板列表失败!	{"err": "invalid connection"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/09 - 10:12:24.062	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_template.go:107	获取工作流模版信息失败,请重试!	{"error": "invalid connection"}

@@ -19,7 +19,7 @@ import (
 // @securityDefinitions.apikey  ApiKeyAuth
 // @in                          header
 // @name                        x-token
-// @BasePath                    /
+// @BasePath
 func main() {
 	global.GVA_VP = core.Viper() // 初始化Viper
 	initialize.OtherInit()

@@ -11,9 +11,16 @@
       来自工单模板 - {{ route.query?.name }}
     </el-tag>
 
-    <el-tabs type="border-card">
+    <el-tabs
+      v-model="currentTab"
+      type="border-card"
+      @tab-change="handleTabChange"
+    >
       <!-- ===============================基本信息============================= -->
-      <el-tab-pane label="基本信息">
+      <el-tab-pane
+        label="基本信息"
+        name="基本信息"
+      >
         <el-form :model="form">
           <div style="display:flex">
             <el-form-item label="工作流名称">
@@ -47,7 +54,10 @@
       </el-tab-pane>
 
       <!-- ===============================自定义表单============================= -->
-      <el-tab-pane label="自定义表单">
+      <el-tab-pane
+        label="自定义表单"
+        name="自定义表单"
+      >
 
         <v-form-designer
           ref="vfDesigner"
@@ -65,12 +75,21 @@
       </el-tab-pane>
 
       <!-- ===============================状态============================= -->
-      <el-tab-pane label="状态">
+      <el-tab-pane
+        label="状态"
+        name="状态"
+      >
         <FlowStatus :templateid="route.query.id" />
       </el-tab-pane>
       <!-- ===============================流转============================= -->
-      <el-tab-pane label="流转">
-        <FlowCircle :templateid="route.query.id" />
+      <el-tab-pane
+        label="流转"
+        name="流转"
+      >
+        <FlowCircle
+          ref="circleRef"
+          :templateid="route.query.id"
+        />
       </el-tab-pane>
 
     </el-tabs>
@@ -94,6 +113,17 @@ import FlowCircle from '@/view/workflow/template/component/flowCircle.vue'
 const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
+const currentTab = ref('基本信息')
+
+// ============tab切换事件========
+const circleRef = ref(null)
+
+const handleTabChange = (tab) => {
+  currentTab.value = tab
+  if (tab === '流转') {
+    circleRef.value.getCircleOptions()
+  }
+}
 
 var isCreate = route.query.id === undefined
 var nullJson = '{"formConfig": {"size": "", "cssCode": "", "refName": "vForm", "functions": "", "modelName": "formData", "rulesName": "rules", "labelAlign": "label-left-align", "labelWidth": 80, "layoutType": "PC", "customClass": [], "jsonVersion": 3, "labelPosition": "left", "onFormCreated": "", "onFormMounted": "", "onFormDataChange": ""}, "widgetList": []}'
@@ -148,11 +178,6 @@ const submitTemplate = async() => {
 
 // ========表单设计=======
 const vfDesigner = ref(null)
-// const fieldListApi = reactive({
-//   URL: 'https://www.fastmock.site/mock/2de212e0dc4b8e0885fea44ab9f2e1d0/vform/listField',
-//   labelKey: 'fieldLabel',
-//   nameKey: 'fieldName'
-// })
 const testBanned = ref([
   // 'sub-form',
   // 'alert',
@@ -167,10 +192,6 @@ const designerConfig = reactive({
   exportJsonButton: true,
   importJsonButton: true,
   generateSFCButton: false,
-  // clearDesignerButton: true,
-  // previewFormButton: false,
-
-  // presetCssCode: '.abc { font-size: 16px; }',
 })
 
 </script>

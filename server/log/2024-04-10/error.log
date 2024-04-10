@@ -1,0 +1,8 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/10 - 09:20:35.944	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/10 - 10:31:15.536	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/10 - 10:31:36.409	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/10 - 13:59:37.528	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_order.go:115	处理失败!	{"error": "record not found"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/10 - 14:01:15.102	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_order.go:115	处理失败!	{"error": "record not found"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/10 - 14:05:58.027	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_order.go:115	处理失败!	{"error": "record not found"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/10 - 14:17:29.594	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_order.go:115	处理失败!	{"error": "record not found"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/10 - 14:19:45.748	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_order.go:115	处理失败!	{"error": "record not found"}

@@ -143,3 +143,11 @@ export const createWorkflowOrder = (data) => {
     data: data,
   })
 }
+
+export const handleOrderApi = (data) => {
+  return service({
+    url: '/workflow/handleOrder',
+    method: 'post',
+    data: data,
+  })
+}

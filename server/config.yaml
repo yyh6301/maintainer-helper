@@ -60,11 +60,11 @@ db-list:
       password: ""
       path: ""
       engine: ""
-      log-mode: ""
+      log-mode: "info"
       max-idle-conns: 10
       max-open-conns: 100
       singular: false
-      log-zap: false
+      log-zap: true
       disable: true
 email:
     to: xxx@qq.com
@@ -128,7 +128,7 @@ mysql:
     password: yyh6301
     path: 120.25.172.211
     engine: ""
-    log-mode: error
+    log-mode: info
     max-idle-conns: 10
     max-open-conns: 100
     singular: false

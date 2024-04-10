@@ -31,6 +31,9 @@ type WorkFlowCircle struct {
 	TargetID      uint   `json:"targetID" gorm:"comment:目标环节ID" form:"targetID"`
 	AttributeType int64  `json:"attributeType" gorm:"comment:属性类型,0:同意,1:拒绝" form:"attributeType"`
 	TemplateID    uint   `json:"templateID" gorm:"comment:流程模板ID" form:"templateID"`
+
+	//SourceStatus WorkFlowStatus `json:"sourceStatus" gorm:"foreignKey:SourceID;references:ID"`
+	//TargetStatus WorkFlowStatus `json:"targetStatus" gorm:"foreignKey:TargetID;references:ID"`
 }
 
 type WorkFlowOrder struct {
@@ -38,22 +41,25 @@ type WorkFlowOrder struct {
 	TemplateID       uint               `json:"templateID" gorm:"comment:流程模板ID" form:"templateID"`
 	Title            string             `json:"title" gorm:"comment:流程标题" form:"title"`
 	OrderDetail      string             `json:"orderDetail" gorm:"type:json;comment:流程详情" form:"orderDetail"`
-	OrderStatus      string             `json:"orderStatus" gorm:"comment:流程状态" form:"orderStatus"`
+	OrderStatusID    uint               `json:"orderStatusID" gorm:"comment:流程状态ID" form:"orderStatusID"`
 	OrderCreator     string             `json:"orderCreator" gorm:"comment:流程创建者" form:"orderCreator"`
 	OrderModifier    string             `json:"orderModifier" gorm:"comment:流程修改者" form:"orderModifier"`
 	WorkFlowTemplate WorkFlowTemplate   `json:"workFlowTemplate" gorm:"foreignKey:TemplateID;references:ID"`
 	WorkFlowOrderLog []WorkFlowOrderLog `json:"workFlowOrderLog" gorm:"foreignKey:OrderID;references:ID"`
+	WorkFlowStatus   WorkFlowStatus     `json:"workFlowStatus" gorm:"foreignKey:OrderStatusID;references:ID"`
 }
 
 type WorkFlowOrderLog struct {
 	global.GVA_MODEL
-	OrderID    uint   `json:"orderID" gorm:"comment:工单ID" form:"orderID"`
-	TemplateID uint   `json:"templateID" gorm:"comment:流程模板ID" form:"templateID"`
-	SourceID   uint   `json:"sourceID" gorm:"comment:源环节ID" form:"sourceID"`
-	TargetID   uint   `json:"targetID" gorm:"comment:目标环节ID" form:"targetID"`
-	Handler    string `json:"handler" gorm:"comment:流程处理人" form:"handler"`
-	Status     uint   `json:"status" gorm:"status:处理状态 0:未处理，1:同意，2:拒绝" form:"status"`
-	Opinion    string `json:"opinion" gorm:"comment:处理意见" form:"opinion"`
+	OrderID      uint           `json:"orderID" gorm:"comment:工单ID" form:"orderID"`
+	TemplateID   uint           `json:"templateID" gorm:"comment:流程模板ID" form:"templateID"`
+	SourceID     uint           `json:"sourceID" gorm:"comment:源环节ID" form:"sourceID"`
+	TargetID     uint           `json:"targetID" gorm:"comment:目标环节ID" form:"targetID"`
+	Handler      string         `json:"handler" gorm:"comment:流程处理人" form:"handler"`
+	Status       uint           `json:"status" gorm:"status:处理状态 0:未处理，1:同意，2:拒绝" form:"status"`
+	Opinion      string         `json:"opinion" gorm:"comment:处理意见" form:"opinion"`
+	SourceStatus WorkFlowStatus `json:"sourceStatus" gorm:"foreignKey:SourceID;references:ID"`
+	TargetStatus WorkFlowStatus `json:"targetStatus" gorm:"foreignKey:TargetID;references:ID"`
 }
 
 func (w *WorkFlowTemplate) TableName() string {

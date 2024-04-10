@@ -67,7 +67,7 @@
           min-width="100"
         >
           <template #default="{ row }">
-            <el-tag>{{ row.orderStatus }}</el-tag>
+            <el-tag>{{ row.workFlowStatus.statusName }}</el-tag>
           </template>
         </el-table-column>
 

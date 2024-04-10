@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/prop-name-casing -->
 <template>
   <div>
     <div class="gva-search-box">
@@ -12,7 +13,10 @@
             placeholder="流转名称"
           />
         </el-form-item>
-        <el-form-item label="源状态">
+        <el-form-item
+          label="源状态"
+          style="width: 18%;"
+        >
           <el-select
             v-model="searchInfo.sourceID"
             placeholder="源状态"
@@ -26,7 +30,10 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="目标状态">
+        <el-form-item
+          label="目标状态"
+          style="width: 18%;"
+        >
           <el-select
             v-model="searchInfo.targetID"
             placeholder="源状态"
@@ -238,7 +245,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, toRefs } from 'vue'
+import { ref, defineProps, defineExpose, toRefs } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   createCircle,
@@ -246,6 +253,7 @@ import {
   updateCircle,
   deleteCircle,
   getCircleList,
+  getTemplateStatusList,
 } from '@/api/workflow'
 defineOptions({
   name: 'FlowCircle'
@@ -289,6 +297,18 @@ const handleCurrentChange = (val) => {
   getTableData()
 }
 
+const getCircleOptions = async() => {
+  const res = await getTemplateStatusList({ page: 1, pageSize: 999, templateID: Number(templateid.value) })
+
+  CircleOptions.value = res.data.list.map(item => {
+    return {
+      value: item.ID,
+      label: item.statusName
+    }
+  })
+}
+getCircleOptions()
+
 // 查询
 const getTableData = async() => {
   const table = await getCircleList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
@@ -324,24 +344,7 @@ const handleDelete = (row) => {
     })
 }
 
-const CircleOptions = ref([
-  {
-    value: 1,
-    label: '填写资源需求'
-  },
-  {
-    value: 2,
-    label: '运维审批'
-  },
-  {
-    value: 3,
-    label: '申请资源'
-  },
-  {
-    value: 4,
-    label: '结束'
-  }
-])
+const CircleOptions = ref([])
 
 const AttributeTypeOptions = ref([
   {
@@ -387,6 +390,7 @@ const getAttributeTypeLabel = (type) => {
 }
 
 const getCircle = (type) => {
+  console.log(CircleOptions.value, type)
   const item = CircleOptions.value.find(item => item.value === type)
   return item ? item.color : ''
 }
@@ -473,17 +477,8 @@ const enterDialog = async() => {
   })
 }
 
-// 定义一个函数，用于批量转换对象的数字属性为数字类型
-// const convertNumberProps = (obj) => {
-//   // 遍历对象的属性
-//   for (const key in obj) {
-//     // 检查属性值是否可以转换为数字
-//     if (!isNaN(parseFloat(obj[key])) && isFinite(obj[key])) {
-//       // 将属性值转换为数字类型
-//       obj[key] = parseFloat(obj[key])
-//     }
-//   }
-// }
+defineExpose({
+  getCircleOptions
+})
 
 </script>
-

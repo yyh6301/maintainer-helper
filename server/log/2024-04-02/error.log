@@ -1,0 +1,17 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 21:20:47.720	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 21:20:48.227	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 21:20:53.483	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 21:22:18.094	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 21:40:04.357	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 21:48:51.927	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_template.go:107	获取工作流模版信息失败,请重试!	{"error": "record not found"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 23:02:48.942	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 23:02:49.760	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 23:02:54.334	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 23:04:21.541	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 23:05:23.540	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 23:05:24.439	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 23:05:40.411	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 23:10:24.118	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 23:15:18.407	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 23:15:31.507	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/02 - 23:59:03.913	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection

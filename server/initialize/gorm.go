@@ -1,7 +1,6 @@
 package initialize
 
 import (
-	"github.com/flipped-aurora/gin-vue-admin/server/model/cmdb"
 	"os"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
@@ -29,31 +28,31 @@ func Gorm() *gorm.DB {
 func RegisterTables() {
 	db := global.GVA_DB
 	err := db.AutoMigrate(
-		cmdb.CloudAssets{},
-		cmdb.WorkFlowOrder{},
-		cmdb.WorkFlowTemplate{},
-		cmdb.WorkFlowStatus{},
-		cmdb.WorkFlowCircle{},
-		cmdb.WorkFlowOrderLog{},
-		//system.SysApi{},
-		//system.SysUser{},
-		//system.SysBaseMenu{},
-		//system.JwtBlacklist{},
-		//system.SysAuthority{},
-		//system.SysDictionary{},
-		//system.SysOperationRecord{},
-		//system.SysAutoCodeHistory{},
-		//system.SysDictionaryDetail{},
-		//system.SysBaseMenuParameter{},
-		//system.SysBaseMenuBtn{},
-		//system.SysAuthorityBtn{},
-		//system.SysAutoCode{},
-		//system.SysExportTemplate{},
-		//
-		//example.ExaFile{},
-		//example.ExaCustomer{},
-		//example.ExaFileChunk{},
-		//example.ExaFileUploadAndDownload{},
+	//cmdb.CloudAssets{},
+	//cmdb.WorkFlowOrder{},
+	//cmdb.WorkFlowTemplate{},
+	//cmdb.WorkFlowStatus{},
+	//cmdb.WorkFlowCircle{},
+	//cmdb.WorkFlowOrderLog{},
+	//system.SysApi{},
+	//system.SysUser{},
+	//system.SysBaseMenu{},
+	//system.JwtBlacklist{},
+	//system.SysAuthority{},
+	//system.SysDictionary{},
+	//system.SysOperationRecord{},
+	//system.SysAutoCodeHistory{},
+	//system.SysDictionaryDetail{},
+	//system.SysBaseMenuParameter{},
+	//system.SysBaseMenuBtn{},
+	//system.SysAuthorityBtn{},
+	//system.SysAutoCode{},
+	//system.SysExportTemplate{},
+	//
+	//example.ExaFile{},
+	//example.ExaCustomer{},
+	//example.ExaFileChunk{},
+	//example.ExaFileUploadAndDownload{},
 	)
 	if err != nil {
 		global.GVA_LOG.Error("register table failed", zap.Error(err))

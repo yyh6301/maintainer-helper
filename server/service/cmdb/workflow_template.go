@@ -122,7 +122,7 @@ func (w WorkFlowTemplateService) UpdateTemplateStatus(status cmdb.WorkFlowStatus
 	if errors.Is(err, gorm.ErrRecordNotFound) {                          // api记录不存在
 		return err
 	}
-	err = global.GVA_DB.Model(&entity).Updates(&status).Error
+	err = global.GVA_DB.Model(&entity).Select('*').Updates(&status).Error
 	if err != nil {
 		return err
 	}

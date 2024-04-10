@@ -46,6 +46,22 @@
       style="width: 100%"
     >
       <el-table-column
+        prop="ID"
+        label="序号"
+        width="80"
+      />
+      <el-table-column
+        prop="sourceStatus.statusName"
+        label="源状态"
+        width="180"
+      />
+      <el-table-column
+        prop="targetStatus.statusName"
+        label="目标状态"
+        width="180"
+      />
+
+      <el-table-column
         prop="handler"
         label="处理人"
         width="180"
@@ -57,7 +73,7 @@
       >
         <template #default="{ row }">
           <div v-if="row.status !== 0">
-            {{ formatDate(row.UpdateAt) }}
+            {{ formatDate(row.UpdatedAt) }}
           </div>
           <div v-else>
             <el-tag :type="'info'">等待处理</el-tag>
@@ -73,6 +89,14 @@
             {{ getStatusLabel(row.status) }}
           </el-tag></template>
       </el-table-column>
+      <el-table-column>
+        <template #label>
+          <span>处理意见</span>
+        </template>
+        <template #default="{ row }">
+          <el-tag>{{ row.opinion }}</el-tag>
+        </template>
+      </el-table-column>
     </el-table>
 
   </div>
@@ -80,16 +104,21 @@
 </template>
 
 <script setup>
+import { useUserStore } from '@/pinia/modules/user'
 import { useRoute } from 'vue-router'
 import { getOrderDetail } from '@/api/workflow'
 import { ref, onMounted, reactive } from 'vue'
 import { VFormRender } from 'vform3-builds'
 import { formatDate } from '@/utils/format.js'
+import { handleOrderApi } from '@/api/workflow.js'
+import { ElMessage } from 'element-plus'
 const route = useRoute()
 
 const form = ref({})
 const tableData = ref([])
-
+const userStore = useUserStore()
+const orderId = ref(0)
+orderId.value = Number(route.query.orderId)
 const getOrderDetailData = async() => {
   console.log('route.query.orderId', route.query.orderId)
   const res = await getOrderDetail({ id: Number(route.query.orderId) })
@@ -149,18 +178,35 @@ const vFormRef = ref(null)
 
 const handleParams = ref({
   handler: '',
-  option: '',
+  opinion: '',
   result: '',
 })
+handleParams.value.handler = userStore.userInfo.userName
 
-const handleOrder = (type) => {
+const handleOrder = async(type) => {
   console.log('type', type)
+  var res = {}
   switch (type) {
     case 'reject':
-      handleParams
-
+      // todo ，这个opinion让用户自己输入
+      handleParams.value.opinion = 'reject'
+      handleParams.value.result = 'false'
+      res = await handleOrderApi({ id: orderId.value, ...handleParams.value })
+      console.log('res', res)
+      if (res.code === 0) {
+        ElMessage.success('拒绝工单成功')
+        router.push({ name: 'orderDetail' })
+      }
       break
     case 'pass':
+      handleParams.value.opinion = 'pass'
+      handleParams.value.result = 'true'
+      res = await handleOrderApi({ id: orderId.value, ...handleParams.value })
+      console.log('res', res)
+      if (res.code === 0) {
+        ElMessage.success('通过工单成功')
+        router.push({ name: 'orderDetail' })
+      }
       break
     default:
       break

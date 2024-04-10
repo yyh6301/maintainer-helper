@@ -1,0 +1,2 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/03 - 12:38:42.724	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/03 - 21:16:04.299	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_template.go:107	获取工作流模版信息失败,请重试!	{"error": "record not found"}

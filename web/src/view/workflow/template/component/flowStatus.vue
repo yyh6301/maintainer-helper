@@ -255,7 +255,7 @@ const onSubmit = () => {
   getTableData()
 }
 
-// // 分页
+// 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
   getTableData()
@@ -339,7 +339,7 @@ const approvalTypeOptions = ref([
   {
     value: 2,
     label: 'hook调用',
-    color: 'danger' // 设置颜色
+    color: 'primary' // 设置颜色
   }
 ])
 
@@ -368,7 +368,7 @@ const getStatusType = (type) => {
 
 const getApprovalType = (type) => {
   const item = approvalTypeOptions.value.find(item => item.value === type)
-  return item ? item.label : ''
+  return item ? item.color : ''
 }
 
 const getStatusLabel = (type) => {
