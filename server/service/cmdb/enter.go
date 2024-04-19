@@ -3,7 +3,8 @@ package cmdb
 type ServiceGroup struct {
 	AssetsQueryService
 	AssetsApplyService
-	AssetsRecycleService
+	AssetsRenewService
+	AssetsTransferService
 	WorkFlowTemplateService
 	WorkFlowOrderService
 }

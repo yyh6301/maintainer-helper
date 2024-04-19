@@ -1,0 +1,3 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/12 - 22:37:55.277	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "invalid connection"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/12 - 22:37:55.333	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_user.go:437	获取失败!	{"error": "invalid connection"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/12 - 23:19:10.431	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection

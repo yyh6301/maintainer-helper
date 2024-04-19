@@ -12,11 +12,7 @@ type WorkFlowTemplateService struct {
 }
 
 func (w WorkFlowTemplateService) CreateWorkFlowTemplate(workflow cmdb.WorkFlowTemplate) error {
-	if workflow.FlowDetail == "" {
-		defaultJSON := "{}" // 设置默认的空JSON字符串
-		workflow.FlowDetail = defaultJSON
-	}
-
+	
 	if workflow.FlowFormDetail == "" {
 		defaultJSON := "{}" // 设置默认的空JSON字符串
 		workflow.FlowFormDetail = defaultJSON

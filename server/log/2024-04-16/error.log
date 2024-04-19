@@ -1,0 +1,6 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/16 - 10:47:04.304	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/16 - 10:50:48.112	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/16 - 12:49:28.828	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "invalid connection"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/16 - 15:00:36.454	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/16 - 19:19:24.599	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/16 - 20:14:23.410	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "invalid connection"}

@@ -28,6 +28,9 @@ func Gorm() *gorm.DB {
 func RegisterTables() {
 	db := global.GVA_DB
 	err := db.AutoMigrate(
+	//cmdb.CloudApply{},
+	//cmdb.CloudRenew{},
+	//cmdb.CloudTransfer{},
 	//cmdb.CloudAssets{},
 	//cmdb.WorkFlowOrder{},
 	//cmdb.WorkFlowTemplate{},

@@ -6,8 +6,7 @@ type WorkFlowTemplate struct {
 	global.GVA_MODEL
 	FlowName       string `json:"flowName" gorm:"comment:流程名称" form:"flowName" `
 	FlowDesc       string `json:"flowDesc" gorm:"comment:流程描述"`
-	FlowDetail     string `json:"flowDetail" gorm:"type:json;comment:流程详情"`
-	FlowFormDetail string `json:"flowFormDetail" gorm:"type:json;comment:流程表单详情"`
+	FlowFormDetail string `json:"flowFormDetail" gorm:"type:json;comment:自定义表单信息"`
 	FlowCreator    string `json:"flowCreator" gorm:"comment:流程创建者"`
 	FlowModifier   string `json:"flowModifier" gorm:"comment:流程修改者"`
 
@@ -51,13 +50,14 @@ type WorkFlowOrder struct {
 
 type WorkFlowOrderLog struct {
 	global.GVA_MODEL
-	OrderID      uint           `json:"orderID" gorm:"comment:工单ID" form:"orderID"`
-	TemplateID   uint           `json:"templateID" gorm:"comment:流程模板ID" form:"templateID"`
-	SourceID     uint           `json:"sourceID" gorm:"comment:源环节ID" form:"sourceID"`
-	TargetID     uint           `json:"targetID" gorm:"comment:目标环节ID" form:"targetID"`
-	Handler      string         `json:"handler" gorm:"comment:流程处理人" form:"handler"`
-	Status       uint           `json:"status" gorm:"status:处理状态 0:未处理，1:同意，2:拒绝" form:"status"`
-	Opinion      string         `json:"opinion" gorm:"comment:处理意见" form:"opinion"`
+	OrderID    uint   `json:"orderID" gorm:"comment:工单ID" form:"orderID"`
+	TemplateID uint   `json:"templateID" gorm:"comment:流程模板ID" form:"templateID"`
+	SourceID   uint   `json:"sourceID" gorm:"comment:源环节ID" form:"sourceID"`
+	TargetID   uint   `json:"targetID" gorm:"comment:目标环节ID" form:"targetID"`
+	Handler    string `json:"handler" gorm:"comment:流程处理人" form:"handler"`
+	Status     uint   `json:"status" gorm:"status:处理状态 0:未处理，1:同意，2:拒绝" form:"status"`
+	Opinion    string `json:"opinion" gorm:"comment:处理意见" form:"opinion"`
+
 	SourceStatus WorkFlowStatus `json:"sourceStatus" gorm:"foreignKey:SourceID;references:ID"`
 	TargetStatus WorkFlowStatus `json:"targetStatus" gorm:"foreignKey:TargetID;references:ID"`
 }

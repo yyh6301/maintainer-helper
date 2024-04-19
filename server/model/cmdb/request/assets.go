@@ -9,3 +9,18 @@ type SearchAssetsParams struct {
 	cmdb.CloudAssets
 	request.PageInfo
 }
+
+type SearchAssetsApplyParams struct {
+	cmdb.CloudApply
+	request.PageInfo
+}
+
+type SearchAssetsRenewParams struct {
+	cmdb.CloudRenew
+	request.PageInfo
+}
+
+type SearchAssetsTransferParams struct {
+	cmdb.CloudTransfer
+	request.PageInfo
+}

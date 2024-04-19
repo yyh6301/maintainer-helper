@@ -1,0 +1,4 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/14 - 01:12:36.055	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "invalid connection"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/14 - 10:03:30.605	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "dial tcp 120.25.172.211:3306: connect: connection timed out"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/14 - 19:30:13.558	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/14 - 21:01:30.941	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	net.Listen error: listen tcp :8888: bind: address already in use

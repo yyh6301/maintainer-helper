@@ -117,7 +117,9 @@ func (w WorkFlowOrderService) UpdateOrder(order cmdb.WorkFlowOrder) error {
 
 func (w WorkFlowOrderService) GetOrderById(order cmdb.WorkFlowOrder) (res cmdb.WorkFlowOrder, err error) {
 	err = global.GVA_DB.Preload("WorkFlowTemplate").
-		Preload("WorkFlowOrderLog").
+		Preload("WorkFlowOrderLog", func(db *gorm.DB) *gorm.DB {
+			return db.Order("updated_at DESC")
+		}).
 		Preload("WorkFlowOrderLog.SourceStatus").
 		Preload("WorkFlowOrderLog.TargetStatus").
 		Where("id = ?", order.ID).First(&res).Error

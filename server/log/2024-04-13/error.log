@@ -1,0 +1,5 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/13 - 08:57:53.105	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/13 - 09:03:01.304	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/13 - 09:03:16.023	[31merror[0m	/code/maintainer-helper/server/core/server.go:43	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/13 - 09:12:40.287	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_template.go:107	获取工作流模版信息失败,请重试!	{"error": "record not found"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/13 - 09:29:33.903	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_template.go:107	获取工作流模版信息失败,请重试!	{"error": "record not found"}

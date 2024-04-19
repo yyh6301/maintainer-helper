@@ -64,7 +64,7 @@ func Routers() *gin.Engine {
 	//PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
 	{
 		cmdbRouter.InitWorkFlowRouter(PrivateGroup)
-		cmdbRouter.InitAssetsManageRouter(PrivateGroup)             // 注册资产管理路由 q
+		cmdbRouter.InitAssetsManageRouter(PrivateGroup)             // 注册资产管理路由
 		systemRouter.InitApiRouter(PrivateGroup, PublicGroup)       // 注册功能api路由
 		systemRouter.InitJwtRouter(PrivateGroup)                    // jwt相关路由
 		systemRouter.InitUserRouter(PrivateGroup)                   // 注册用户路由

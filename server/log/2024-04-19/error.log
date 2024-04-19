@@ -1,0 +1,8 @@
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/19 - 09:31:10.061	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "dial tcp 120.25.172.211:3306: connect: connection timed out"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/19 - 11:03:03.440	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "dial tcp 120.25.172.211:3306: connect: connection timed out"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/19 - 11:07:49.835	[31merror[0m	/code/maintainer-helper/server/core/server.go:41	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/19 - 15:55:54.804	[31merror[0m	/code/maintainer-helper/server/core/server.go:41	accept tcp [::]:8888: use of closed network connection
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/19 - 16:12:58.833	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_user.go:56	登陆失败! 用户名不存在或者密码错误!	{"error": "db not init"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/19 - 16:13:08.024	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_user.go:56	登陆失败! 用户名不存在或者密码错误!	{"error": "db not init"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/19 - 16:13:20.217	[31merror[0m	/code/maintainer-helper/server/core/server.go:41	net.Listen error: listen tcp :8888: bind: address already in use
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/19 - 18:40:40.021	[31merror[0m	/code/maintainer-helper/server/core/server.go:41	accept tcp [::]:8888: use of closed network connection

@@ -6,3 +6,4 @@
 [github.com/flipped-aurora/gin-vue-admin/server]2024/04/10 - 14:05:58.027	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_order.go:115	处理失败!	{"error": "record not found"}
 [github.com/flipped-aurora/gin-vue-admin/server]2024/04/10 - 14:17:29.594	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_order.go:115	处理失败!	{"error": "record not found"}
 [github.com/flipped-aurora/gin-vue-admin/server]2024/04/10 - 14:19:45.748	[31merror[0m	/code/maintainer-helper/server/api/v1/cmdb/workflow_order.go:115	处理失败!	{"error": "record not found"}
+[github.com/flipped-aurora/gin-vue-admin/server]2024/04/10 - 19:43:30.957	[31merror[0m	/code/maintainer-helper/server/api/v1/system/sys_menu.go:29	获取失败!	{"error": "invalid connection"}

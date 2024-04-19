@@ -10,17 +10,17 @@ import (
 	"go.uber.org/zap"
 )
 
-type AssetsRecycleApi struct {
+type AssetsTransferApi struct {
 }
 
-func (a *AssetsRecycleApi) GetAssetsRecycleList(c *gin.Context) {
-	var pageInfo cmdbRequest.SearchAssetsRecycleParams
+func (a *AssetsTransferApi) GetAssetsTransferList(c *gin.Context) {
+	var pageInfo cmdbRequest.SearchAssetsTransferParams
 	err := c.ShouldBindQuery(&pageInfo)
 	if err != nil {
 		global.GVA_LOG.Error("获取查询参数失败!", zap.Any("err", err))
 		response.FailWithMessage("获取查询参数失败", c)
 	}
-	list, total, err := RecycleService.GetAssetsRecycleList(pageInfo.CloudRecycle, pageInfo.PageInfo)
+	list, total, err := transferService.GetAssetsTransferList(pageInfo.CloudTransfer, pageInfo.PageInfo)
 	if err != nil {
 		global.GVA_LOG.Error("获取工作流模板列表失败!", zap.Any("err", err))
 		response.FailWithMessage("获取工作流模板列表失败", c)
@@ -33,17 +33,17 @@ func (a *AssetsRecycleApi) GetAssetsRecycleList(c *gin.Context) {
 	}, "获取工作流模板列表成功", c)
 }
 
-func (a *AssetsRecycleApi) CreateAssetsRecycle(c *gin.Context) {
-	var cloudRecycle cmdb.CloudRecycle
-	err := c.ShouldBindJSON(&cloudRecycle)
+func (a *AssetsTransferApi) CreateAssetsTransfer(c *gin.Context) {
+	var cloudTransfer cmdb.CloudTransfer
+	err := c.ShouldBindJSON(&cloudTransfer)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 	}
-	//err = utils.Verify(CloudAssets, utils.AssetsRecycleVerify)
+	//err = utils.Verify(CloudAssets, utils.AssetsTransferVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 	}
-	err = RecycleService.CreateAssetsRecycle(cloudRecycle)
+	err = transferService.CreateAssetsTransfer(cloudTransfer)
 	if err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("创建失败", c)
@@ -52,17 +52,17 @@ func (a *AssetsRecycleApi) CreateAssetsRecycle(c *gin.Context) {
 	response.OkWithMessage("创建成功", c)
 }
 
-func (a *AssetsRecycleApi) DeleteAssetsRecycle(c *gin.Context) {
-	var cloudRecycle cmdb.CloudRecycle
-	err := c.ShouldBindJSON(&cloudRecycle)
+func (a *AssetsTransferApi) DeleteAssetsTransfer(c *gin.Context) {
+	var cloudTransfer cmdb.CloudTransfer
+	err := c.ShouldBindJSON(&cloudTransfer)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 	}
-	err = utils.Verify(cloudRecycle, utils.IdVerify)
+	err = utils.Verify(cloudTransfer, utils.IdVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 	}
-	err = RecycleService.DeleteAssetsRecycle(cloudRecycle)
+	err = transferService.DeleteAssetsTransfer(cloudTransfer)
 	if err != nil {
 		global.GVA_LOG.Error("删除失败!", zap.Error(err))
 		response.FailWithMessage("删除失败", c)
