@@ -66,14 +66,28 @@
         />
         <el-table-column
           align="left"
+          label="机器名称"
+          min-width="100"
+          prop="InstanceName"
+        />
+        <el-table-column
+          align="left"
+          label="申请人"
+          min-width="100"
+          prop="applyer"
+        />
+
+        <el-table-column
+          align="left"
           label="申请原因"
           min-width="100"
           prop="applyReason"
         />
+
         <el-table-column
-          align="left"
+          align="middle"
           label="申请时间"
-          min-width="100"
+          min-width="180"
           prop="createdAt"
         />
         <el-table-column
@@ -114,19 +128,95 @@
         />
       </div>
     </div>
+    <el-dialog
+      v-model="dialogFormVisible"
+      :before-close="closeDialog"
+      :title="dialogTitle"
+    >
+
+      <el-form
+        :model="dialogForm"
+        label-width="80px"
+      >
+        <div style="display: flex">
+          <el-form-item
+            label="客户名"
+          >
+            <el-input
+              v-model="form.clusterName"
+              placeholder="请输入客户名"
+            />
+          </el-form-item>
+
+          <el-form-item
+            label="厂商"
+            style="width:30%"
+          >
+            <el-select
+              v-model="form.cloudType"
+              placeholder="请选择厂商"
+            >
+              <el-option
+                v-for="(item, index) in CloudTypeOption"
+                :key="index"
+                :label="item.value"
+                :value="item.value"
+              />
+
+            </el-select>
+          </el-form-item>
+        </div>
+
+        <v-form-render
+          ref="vFormRef"
+          :form-json="formJson"
+          :form-data="formData"
+          :option-data="optionData"
+        />
+
+        <el-form-item
+          label="申请原因"
+        >
+          <el-input
+            v-model="form.applyReason"
+            type="textarea"
+            placeholder="请输入申请原因"
+          />
+        </el-form-item>
+
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="closeDialog">取 消</el-button>
+          <el-button
+            type="primary"
+            @click="enterDialog"
+          >确 定</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import {
-  getWorkflowTemplateList,
+  getWorkflowTemplateById,
   deleteWorkflowTemplate,
 } from '@/api/workflow'
-
+import { VFormRender } from 'vform3-builds'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
+import { useUserStore } from '@/pinia/modules/user'
 
+const userStore = useUserStore()
+const CloudTypeOption = ref([{
+  value: '腾讯云'
+}, {
+  value: '阿里云'
+}, {
+  value: '亚马逊云'
+}])
 // import { ElMessage, ElMessageBox } from 'element-plus'
 
 const router = useRouter()
@@ -134,28 +224,6 @@ const router = useRouter()
 defineOptions({
   name: 'WorkflowTemplate',
 })
-
-// const form = ref({
-//   flowName: '',
-//   flowDesc: '',
-//   flowFormDetail: '',
-//   flowDetail: '',
-//   flowCreator: '',
-//   flowModifier: ''
-// })
-
-// const rules = ref({
-//   // path: [{ required: true, message: '请输入api路径', trigger: 'blur' }],
-//   // apiGroup: [
-//   //   { required: true, message: '请输入组名称', trigger: 'blur' }
-//   // ],
-//   // method: [
-//   //   { required: true, message: '请选择请求方式', trigger: 'blur' }
-//   // ],
-//   // description: [
-//   //   { required: true, message: '请输入api介绍', trigger: 'blur' }
-//   // ]
-// })
 
 const page = ref(1)
 const total = ref(0)
@@ -173,7 +241,7 @@ const onSubmit = () => {
   getTableData()
 }
 
-// // 分页
+// 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
   getTableData()
@@ -254,9 +322,53 @@ const getTableData = async() => {
 }
 
 getTableData()
+const dialogTitle = ref('')
+const dialogForm = ref(null)
+const dialogFormVisible = ref(false)
+const form = ref({
+  cloudType: '',
+  clusterName: '',
+  applyer: '',
+  applyReason: '',
+  templateID: 15,
+  orderID: '',
+  formDetail: ''
+})
 
-const handleAdd = () => {
-  router.replace({ name: 'templateDetail' })
+const closeDialog = () => {
+  dialogFormVisible.value = false
+  form.value = {
+    cloudType: '',
+    clusterName: '',
+    applyer: '',
+    applyReason: '',
+    templateID: 15,
+    orderID: '',
+    formDetail: ''
+  }
+}
+
+const formJson = reactive({ 'widgetList': [], 'formConfig': { 'modelName': 'formData', 'refName': 'vForm', 'rulesName': 'rules', 'labelWidth': 80, 'labelPosition': 'left', 'size': '', 'labelAlign': 'label-left-align', 'cssCode': '', 'customClass': '', 'functions': '', 'layoutType': 'PC', 'jsonVersion': 3, 'onFormCreated': '', 'onFormMounted': '', 'onFormDataChange': '', 'onFormValidate': '' }})
+
+const formData = reactive({})
+const optionData = reactive({})
+const vFormRef = ref(null)
+// 根据templateid找到对应模板的form json
+const getVFormJson = async() => {
+  const res = await getWorkflowTemplateById({ id: form.value.templateID })
+  if (res.code === 0) {
+    form.value.formDetail = res.data.flowFormDetail
+  }
+}
+const handleAdd = async() => {
+  dialogFormVisible.value = true
+  dialogTitle.value = '新建申请'
+  await getVFormJson()
+  setTimeout(() => {
+    if (vFormRef.value !== null) {
+      vFormRef.value.setFormJson(form.value.formDetail)
+    }
+  }, 100) // 延迟 1000 毫秒后执行
 }
 
 const handleEdit = (row) => {

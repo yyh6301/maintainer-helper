@@ -133,7 +133,6 @@ const form = ref({
   flowName: '',
   flowDesc: '',
   flowFormDetail: '',
-  flowDetail: '',
   flowCreator: '',
   flowModifier: ''
 })
@@ -154,7 +153,6 @@ onMounted(async() => {
 
 const submitTemplate = async() => {
   form.value.flowFormDetail = JSON.stringify(vfDesigner.value.getFormJson())
-  form.value.flowDetail = JSON.stringify('{"test": "test"}')
 
   if (isCreate) {
     // 新增工作流

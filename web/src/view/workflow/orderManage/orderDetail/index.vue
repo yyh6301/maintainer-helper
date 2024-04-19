@@ -83,20 +83,17 @@
       <el-table-column
         prop="status"
         label="处理结果"
+        width="180"
       >
         <template #default="{row}">
           <el-tag :type="getStatusColor(row.status)">
             {{ getStatusLabel(row.status) }}
           </el-tag></template>
       </el-table-column>
-      <el-table-column>
-        <template #label>
-          <span>处理意见</span>
-        </template>
-        <template #default="{ row }">
-          <el-tag>{{ row.opinion }}</el-tag>
-        </template>
-      </el-table-column>
+      <el-table-column
+        prop="opinion"
+        label="处理意见"
+      />
     </el-table>
 
   </div>
