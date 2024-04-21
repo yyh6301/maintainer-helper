@@ -182,27 +182,6 @@ defineOptions({
   name: 'WorkflowTemplate',
 })
 
-// const form = ref({
-//   flowName: '',
-//   flowDesc: '',
-//   flowFormDetail: '',
-//   flowDetail: '',
-//   flowCreator: '',
-//   flowModifier: ''
-// })
-
-// const rules = ref({
-//   // path: [{ required: true, message: '请输入api路径', trigger: 'blur' }],
-//   // apiGroup: [
-//   //   { required: true, message: '请输入组名称', trigger: 'blur' }
-//   // ],
-//   // method: [
-//   //   { required: true, message: '请选择请求方式', trigger: 'blur' }
-//   // ],
-//   // description: [
-//   //   { required: true, message: '请输入api介绍', trigger: 'blur' }
-//   // ]
-// })
 
 const page = ref(1)
 const total = ref(0)

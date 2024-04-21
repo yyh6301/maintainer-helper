@@ -12,7 +12,7 @@ type WorkFlowTemplateService struct {
 }
 
 func (w WorkFlowTemplateService) CreateWorkFlowTemplate(workflow cmdb.WorkFlowTemplate) error {
-	
+
 	if workflow.FlowFormDetail == "" {
 		defaultJSON := "{}" // 设置默认的空JSON字符串
 		workflow.FlowFormDetail = defaultJSON
@@ -118,7 +118,18 @@ func (w WorkFlowTemplateService) UpdateTemplateStatus(status cmdb.WorkFlowStatus
 	if errors.Is(err, gorm.ErrRecordNotFound) {                          // api记录不存在
 		return err
 	}
-	err = global.GVA_DB.Model(&entity).Select('*').Updates(&status).Error
+	statusMap := map[string]interface{}{
+		"StatusName":   status.StatusName,
+		"StatusType":   status.StatusType,
+		"ApprovalType": status.ApprovalType,
+		"ApprovalUser": status.ApprovalUser,
+		"OrderNumber":  status.OrderNumber,
+	}
+
+	err = global.GVA_DB.Model(&entity).Updates(statusMap).Error
+	if err != nil {
+		return err
+	}
 	if err != nil {
 		return err
 	}

@@ -3,7 +3,7 @@
     <div class="gva-card-box">
       <div class="gva-card gva-top-card">
         <div class="gva-top-card-left">
-          <div class="gva-top-card-left-title">早安，管理员，请开始一天的工作吧</div>
+          <div class="gva-top-card-left-title">早安，{{ userStore.userInfo.nickName }}，请开始一天的工作吧</div>
           <div class="gva-top-card-left-dot">{{ weatherInfo }}</div>
           <el-row class="my-8 w-[500px]">
             <el-col
@@ -88,10 +88,12 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useWeatherInfo } from '@/view/dashboard/weather.js'
-
+import { useUserStore } from '@/pinia/modules/user'
 defineOptions({
   name: 'Dashboard'
 })
+
+const userStore = useUserStore()
 
 const weatherInfo = useWeatherInfo()
 
@@ -104,30 +106,30 @@ const toolCards = ref([
     bg: 'rgba(255, 156, 110,.3)'
   },
   {
-    label: '工单管理',
+    label: '云资源申请',
     icon: 'setting',
-    name: 'workflowOrder',
+    name: 'apply',
     color: '#69c0ff',
     bg: 'rgba(105, 192, 255,.3)'
   },
   {
-    label: '菜单管理',
+    label: '待办工单',
     icon: 'menu',
-    name: 'menu',
+    name: 'waitDoOrder',
     color: '#b37feb',
     bg: 'rgba(179, 127, 235,.3)'
   },
   {
-    label: '用户管理',
+    label: '发起工单',
     icon: 'cpu',
-    name: 'user',
+    name: 'orderCreate',
     color: '#ffd666',
     bg: 'rgba(255, 214, 102,.3)'
   },
   {
-    label: '主机监控',
+    label: '全部工单',
     icon: 'document-checked',
-    name: 'formCreate',
+    name: 'allOrder',
     color: '#ff85c0',
     bg: 'rgba(255, 133, 192,.3)'
   },

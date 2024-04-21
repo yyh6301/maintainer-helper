@@ -22,21 +22,21 @@ func (a *AssetsManageRouter) InitAssetsManageRouter(Router *gin.RouterGroup) {
 	}
 
 	{
-		assetsManageRouter.GET("getApplyList", assetsApplyApi.GetAssetsApplyList) // 查询申请列表
-		assetsManageRouter.POST("createApply", assetsApplyApi.CreateAssetsApply)  // 创建申请
-		assetsManageRouter.POST("deleteApply", assetsApplyApi.DeleteAssetsApply)  // 删除申请
+		assetsManageRouter.GET("getApplyList", assetsApplyApi.GetAssetsApplyList)  // 查询申请列表
+		assetsManageRouter.POST("createApply", assetsApplyApi.CreateAssetsApply)   // 创建申请
+		assetsManageRouter.DELETE("deleteApply", assetsApplyApi.DeleteAssetsApply) // 删除申请
 	}
 
 	{
-		assetsManageRouter.GET("getTransferList", assetsTransferApi.GetAssetsTransferList) // 查询转让列表
-		assetsManageRouter.POST("createTransfer", assetsTransferApi.CreateAssetsTransfer)  // 转让资产
-		assetsManageRouter.POST("deleteTransfer", assetsTransferApi.DeleteAssetsTransfer)  // 删除转让
+		assetsManageRouter.GET("getTransferList", assetsTransferApi.GetAssetsTransferList)  // 查询转让列表
+		assetsManageRouter.POST("createTransfer", assetsTransferApi.CreateAssetsTransfer)   // 转让资产
+		assetsManageRouter.DELETE("deleteTransfer", assetsTransferApi.DeleteAssetsTransfer) // 删除转让
 	}
 
 	{
-		assetsManageRouter.GET("getRenewList", assetsRenewApi.GetAssetsRenewList) // 查询续费列表
-		assetsManageRouter.POST("createRenew", assetsRenewApi.CreateAssetsRenew)  // 续费资产
-		assetsManageRouter.POST("deleteRenew", assetsRenewApi.DeleteAssetsRenew)  // 删除续费
+		assetsManageRouter.GET("getRenewList", assetsRenewApi.GetAssetsRenewList)  // 查询续费列表
+		assetsManageRouter.POST("createRenew", assetsRenewApi.CreateAssetsRenew)   // 续费资产
+		assetsManageRouter.DELETE("deleteRenew", assetsRenewApi.DeleteAssetsRenew) // 删除续费
 	}
 
 }

@@ -15,13 +15,13 @@
 
               <img
                 class="w-24"
-                :src="$GIN_VUE_ADMIN.appLogo"
+                :src="appLogo"
                 alt
               >
             </div>
             <div class="mb-9">
               <p class="text-center text-4xl font-bold">{{ $GIN_VUE_ADMIN.appName }}</p>
-              <p class="text-center text-sm font-normal text-gray-500 mt-2.5">A management platform using Golang and Vue
+              <p class="text-center text-sm font-normal text-gray-500 mt-2.5">A maintainer platform using Golang and Vue
               </p>
             </div>
             <el-form
@@ -98,11 +98,11 @@
           </div>
         </div>
       </div>
-      <div class="hidden md:block w-1/2 h-full float-right bg-[#194bfb]"><img
+      <!-- <div class="hidden md:block w-1/2 h-full float-right bg-[#194bfb]"><img
         class="h-full"
         src="@/assets/login_right_banner.jpg"
         alt="banner"
-      ></div>
+      ></div> -->
     </div>
 
   </div>
@@ -116,7 +116,7 @@ import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 // import { useRouter } from 'vue-router'
 import { useUserStore } from '@/pinia/modules/user'
-
+import appLogo from '@/assets/logo.png'
 defineOptions({
   name: 'Login',
 })

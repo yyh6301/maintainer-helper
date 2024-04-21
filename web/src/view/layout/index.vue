@@ -16,7 +16,7 @@
           <img
             alt
             class="w-9 h-9 p-1 bg-white rounded-full"
-            :src="$GIN_VUE_ADMIN.appLogo"
+            :src="appLogo"
           >
           <div
             v-if="isSider"
@@ -204,7 +204,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useRouterStore } from '@/pinia/modules/router'
 import { fmtTitle } from '@/utils/fmtRouterTitle'
 import { useUserStore } from '@/pinia/modules/user'
-
+import appLogo from '@/assets/logo.png'
 defineOptions({
   name: 'Layout',
 })

@@ -43,7 +43,7 @@ func (a *WorkflowOrderApi) CreateOrder(c *gin.Context) {
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 	}
-	err = workflowOrderService.CreateOrder(workflowTemplate)
+	err = workflowOrderService.CreateOrder(&workflowTemplate)
 	if err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("创建失败", c)

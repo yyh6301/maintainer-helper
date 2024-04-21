@@ -1,6 +1,8 @@
 package cmdb
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/cmdb"
 	cmdbRequest "github.com/flipped-aurora/gin-vue-admin/server/model/cmdb/request"
@@ -43,6 +45,33 @@ func (a *AssetsApplyApi) CreateAssetsApply(c *gin.Context) {
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 	}
+
+	var data map[string]interface{}
+	err = json.Unmarshal([]byte(cloudApply.WorkFlowOrder.OrderDetail), &data)
+	instanceName, ok := data["instance_name"].(string)
+	if !ok {
+		global.GVA_LOG.Warn("申请工单时instance_name字段不存在")
+		response.FailWithMessage("instance_name字段为空", c)
+	}
+	cloudApply.InstanceName = instanceName
+
+	var order = &cmdb.WorkFlowOrder{
+		Title:         fmt.Sprintf("%s机器申请-%s", cloudApply.CloudType, cloudApply.InstanceName),
+		TemplateID:    cloudApply.WorkFlowOrder.TemplateID,
+		OrderDetail:   cloudApply.WorkFlowOrder.OrderDetail,
+		OrderCreator:  cloudApply.Applyer,
+		OrderModifier: cloudApply.Applyer,
+	}
+
+	err = workflowOrderService.CreateOrder(order)
+	if err != nil {
+		global.GVA_LOG.Error("创建工单失败!", zap.Error(err))
+		response.FailWithMessage("创建失败", c)
+		return
+	}
+	cloudApply.OrderID = order.ID
+	cloudApply.WorkFlowOrder.ID = order.ID
+
 	err = applyService.CreateAssetsApply(cloudApply)
 	if err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))

@@ -11,49 +11,30 @@ import (
 type WorkFlowOrderService struct {
 }
 
-func (w WorkFlowOrderService) CreateOrder(order cmdb.WorkFlowOrder) error {
+func (w WorkFlowOrderService) CreateOrder(order *cmdb.WorkFlowOrder) error {
 	if !errors.Is(global.GVA_DB.Where("title = ? ", order.Title).First(&cmdb.WorkFlowOrder{}).Error, gorm.ErrRecordNotFound) {
 		return errors.New("存在标题工单名称 ")
 	}
-	//处理工单log表，找到对应工单模板状态的开始节点，找到开始节点的下一步，这里log设置状态成待处理，处理完成再修改log状态，添加新的状态到log中.
 
-	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+	//找到对应工单模板状态的开始节点
+	var status cmdb.WorkFlowStatus
+	if err := global.GVA_DB.Where("template_id = ? and status_type = ?", order.TemplateID, 0).First(&status).Error; err != nil {
+		return err
+	}
+	//创建工单
+	order.OrderStatusID = status.ID
+	if err := global.GVA_DB.Create(&order).Error; err != nil {
+		return err
+	}
 
-		//创建工单log
-		//找到对应工单模板状态的开始节点
-		var status cmdb.WorkFlowStatus
-		if err := tx.Where("template_id = ? and status_type = ?", order.TemplateID, 0).First(&status).Error; err != nil {
-			return err
-		}
-		//找到开始节点的下一步
-		var circleList []cmdb.WorkFlowCircle
-		if err := tx.Where("template_id = ? and source_id = ?", order.TemplateID, status.ID).Find(&circleList).Error; err != nil {
-			return err
-		}
-		if len(circleList) == 0 {
-			return errors.New("开始节点没有下一步")
-		}
-		for _, circle := range circleList {
-			//这里log设置状态成待处理
-			orderLog := cmdb.WorkFlowOrderLog{
-				OrderID:    order.ID,
-				TemplateID: order.TemplateID,
-				SourceID:   status.ID,
-				TargetID:   circle.TargetID,
-				Status:     0,
-			}
-			if err := tx.Create(&orderLog).Error; err != nil {
-				return err
-			}
-		}
-		//创建工单
-		order.OrderStatusID = status.ID
-		if err := tx.Create(&order).Error; err != nil {
-			return err
-		}
+	//创建工单以后，默认对工单进行了一次资源修改的提交
+	err := w.HandleOrder(*order, "hook", "", "true")
+	if err != nil {
+		return err
+	}
 
-		return nil
-	})
+	return nil
+
 }
 
 func (w WorkFlowOrderService) GetOrderList(order cmdb.WorkFlowOrder, handler string, application string, info request.PageInfo) (templateList []cmdb.WorkFlowOrder, total int64, err error) {
@@ -66,9 +47,8 @@ func (w WorkFlowOrderService) GetOrderList(order cmdb.WorkFlowOrder, handler str
 	}
 
 	if handler != "" {
-		db = db.Joins("LEFT JOIN work_flow_order_logs ON work_flow_order_logs.order_id = work_flow_orders.id").
-			Where("work_flow_order_logs.handler = ?", handler).
-			Where("work_flow_order_logs.status = ?", 0)
+		db = db.Joins("LEFT JOIN work_flow_status ON work_flow_status.id = work_flow_orders.order_status_id").
+			Where("work_flow_status.approval_user = ?", handler)
 	}
 
 	if application != "" {
@@ -99,6 +79,11 @@ func (w WorkFlowOrderService) DeleteOrder(order cmdb.WorkFlowOrder) error {
 	if err != nil {
 		return err
 	}
+
+	err = global.GVA_DB.Where("order_id = ? ", order.ID).Delete(&cmdb.WorkFlowOrderLog{}).Error
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -117,6 +102,7 @@ func (w WorkFlowOrderService) UpdateOrder(order cmdb.WorkFlowOrder) error {
 
 func (w WorkFlowOrderService) GetOrderById(order cmdb.WorkFlowOrder) (res cmdb.WorkFlowOrder, err error) {
 	err = global.GVA_DB.Preload("WorkFlowTemplate").
+		Preload("WorkFlowStatus").
 		Preload("WorkFlowOrderLog", func(db *gorm.DB) *gorm.DB {
 			return db.Order("updated_at DESC")
 		}).
@@ -127,56 +113,65 @@ func (w WorkFlowOrderService) GetOrderById(order cmdb.WorkFlowOrder) (res cmdb.W
 }
 
 func (w WorkFlowOrderService) HandleOrder(order cmdb.WorkFlowOrder, handler, opinion, result string) error {
-	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		tx.Where("id = ?", order.ID).First(&order)
-		//根据orderStatusID找到当前节点
-		var status cmdb.WorkFlowStatus
-		if err := tx.Where("id = ? ", order.OrderStatusID).First(&status).Error; err != nil {
-			return err
-		}
-		//找到当前节点的下面的流程
-		var circleList []cmdb.WorkFlowCircle
-		if err := tx.Where("template_id = ? and source_id = ?", order.TemplateID, status.ID).Find(&circleList).Error; err != nil {
-			return err
-		}
-		if len(circleList) == 0 {
-			return errors.New("当前状态没有下一步")
-		}
-		//找到下一个状态,todo 这里后面的attributeType换成可自定义条件
-		var nextStatus cmdb.WorkFlowStatus
-		for _, circle := range circleList {
-			if result == "true" && circle.AttributeType == 0 {
-				if err := tx.Where("id = ?", circle.TargetID).First(&nextStatus).Error; err != nil {
-					return err
-				}
-				break
-			} else if result == "false" && circle.AttributeType == 1 {
-				if err := tx.Where("id = ?", circle.TargetID).First(&nextStatus).Error; err != nil {
-					return err
-				}
-				break
+	var err error
+	err = global.GVA_DB.Where("id = ?", order.ID).First(&order).Error
+	if err != nil {
+		return err
+	}
+
+	//根据orderStatusID找到当前节点
+	var status cmdb.WorkFlowStatus
+	if err = global.GVA_DB.Where("id = ? ", order.OrderStatusID).First(&status).Error; err != nil {
+		return err
+	}
+	//找到当前节点的下面的流程
+	var circleList []cmdb.WorkFlowCircle
+	if err := global.GVA_DB.Where("template_id = ? and source_id = ?", order.TemplateID, status.ID).Find(&circleList).Error; err != nil {
+		return err
+	}
+	if len(circleList) == 0 {
+		return errors.New("当前状态没有下一步")
+	}
+	//找到下一个状态
+	var nextStatus cmdb.WorkFlowStatus
+	for _, circle := range circleList {
+		if result == "true" && circle.AttributeType == 0 {
+			if err := global.GVA_DB.Where("id = ?", circle.TargetID).First(&nextStatus).Error; err != nil {
+				return err
 			}
+			break
+		} else if result == "false" && circle.AttributeType == 1 {
+			if err := global.GVA_DB.Where("id = ?", circle.TargetID).First(&nextStatus).Error; err != nil {
+				return err
+			}
+			break
 		}
-		//创建orderlog
-		var s uint = 0
-		if result == "true" {
-			s = 1
-		} else {
-			s = 2
-		}
-		orderLog := cmdb.WorkFlowOrderLog{
-			OrderID:    order.ID,
-			TemplateID: order.TemplateID,
-			SourceID:   status.ID,
-			TargetID:   nextStatus.ID,
-			Handler:    handler,
-			Opinion:    opinion,
-			Status:     s,
-		}
-		err := tx.Create(&orderLog).Error
-		if err != nil {
-			return err
-		}
-		return nil
-	})
+	}
+
+	//修改工单的状态
+	err = global.GVA_DB.Model(&order).Update("order_status_id", nextStatus.ID).Error
+	if err != nil {
+		return err
+	}
+
+	orderLog := cmdb.WorkFlowOrderLog{
+		OrderID:    order.ID,
+		TemplateID: order.TemplateID,
+		SourceID:   status.ID,
+		TargetID:   nextStatus.ID,
+		Handler:    handler,
+		Opinion:    opinion,
+		Status:     1,
+	}
+
+	if result != "true" {
+		orderLog.Status = 2
+	}
+
+	err = global.GVA_DB.Create(&orderLog).Error
+	if err != nil {
+		return err
+	}
+	return nil
+
 }

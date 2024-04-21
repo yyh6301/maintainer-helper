@@ -15,6 +15,7 @@ export const useUserStore = defineStore('user', () => {
     nickName: '',
     headerImg: '',
     authority: {},
+    isAdmin: false,
     sideMode: 'dark',
     activeColor: 'var(--el-color-primary)',
     baseColor: '#fff'
@@ -22,6 +23,10 @@ export const useUserStore = defineStore('user', () => {
   const token = ref(window.localStorage.getItem('token') || cookie.get('x-token') || '')
   const setUserInfo = (val) => {
     userInfo.value = val
+    if (userInfo.value.userName === 'admin') {
+      console.log('admin login...')
+      userInfo.value.isAdmin = true
+    }
   }
 
   const setToken = (val) => {
