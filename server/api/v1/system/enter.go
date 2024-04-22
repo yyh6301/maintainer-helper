@@ -8,32 +8,20 @@ type ApiGroup struct {
 	BaseApi
 	SystemApi
 	CasbinApi
-	AutoCodeApi
-	SystemApiApi
 	AuthorityApi
-	DictionaryApi
 	AuthorityMenuApi
 	OperationRecordApi
-	AutoCodeHistoryApi
-	DictionaryDetailApi
 	AuthorityBtnApi
-	SysExportTemplateApi
 }
 
 var (
-	apiService              = service.ServiceGroupApp.SystemServiceGroup.ApiService
-	jwtService              = service.ServiceGroupApp.SystemServiceGroup.JwtService
-	menuService             = service.ServiceGroupApp.SystemServiceGroup.MenuService
-	userService             = service.ServiceGroupApp.SystemServiceGroup.UserService
-	initDBService           = service.ServiceGroupApp.SystemServiceGroup.InitDBService
-	casbinService           = service.ServiceGroupApp.SystemServiceGroup.CasbinService
-	autoCodeService         = service.ServiceGroupApp.SystemServiceGroup.AutoCodeService
-	baseMenuService         = service.ServiceGroupApp.SystemServiceGroup.BaseMenuService
-	authorityService        = service.ServiceGroupApp.SystemServiceGroup.AuthorityService
-	dictionaryService       = service.ServiceGroupApp.SystemServiceGroup.DictionaryService
-	systemConfigService     = service.ServiceGroupApp.SystemServiceGroup.SystemConfigService
-	operationRecordService  = service.ServiceGroupApp.SystemServiceGroup.OperationRecordService
-	autoCodeHistoryService  = service.ServiceGroupApp.SystemServiceGroup.AutoCodeHistoryService
-	dictionaryDetailService = service.ServiceGroupApp.SystemServiceGroup.DictionaryDetailService
-	authorityBtnService     = service.ServiceGroupApp.SystemServiceGroup.AuthorityBtnService
+	jwtService             = service.ServiceGroupApp.SystemServiceGroup.JwtService
+	menuService            = service.ServiceGroupApp.SystemServiceGroup.MenuService
+	userService            = service.ServiceGroupApp.SystemServiceGroup.UserService
+	casbinService          = service.ServiceGroupApp.SystemServiceGroup.CasbinService
+	baseMenuService        = service.ServiceGroupApp.SystemServiceGroup.BaseMenuService
+	authorityService       = service.ServiceGroupApp.SystemServiceGroup.AuthorityService
+	systemConfigService    = service.ServiceGroupApp.SystemServiceGroup.SystemConfigService
+	operationRecordService = service.ServiceGroupApp.SystemServiceGroup.OperationRecordService
+	authorityBtnService    = service.ServiceGroupApp.SystemServiceGroup.AuthorityBtnService
 )
