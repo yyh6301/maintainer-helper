@@ -364,9 +364,9 @@ const form = ref({
   circleName: '',
   sourceID: '',
   targetID: '',
-
+  templateID: Number(templateid.value)
 })
-form.value.templateID = Number(templateid.value)
+
 const type = ref('')
 const CircleForm = ref(null)
 
@@ -376,6 +376,7 @@ const initForm = () => {
     circleName: '',
     sourceID: '',
     targetID: '',
+    templateID: Number(templateid.value),
   }
 }
 

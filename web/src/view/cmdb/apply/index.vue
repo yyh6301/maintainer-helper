@@ -6,16 +6,27 @@
         :inline="true"
         :model="searchInfo"
       >
-        <el-form-item label="流程名称">
-          <el-input
-            v-model="searchInfo.flowName"
-            placeholder="流程名称"
-          />
+        <el-form-item
+          style="width: 20%;"
+          label="云厂商"
+        >
+          <el-select
+            v-model="searchInfo.CloudType"
+            placeholder="云厂商"
+            clearable
+          >
+            <el-option
+              v-for="(item,index) in CloudTypeOption"
+              :key="index"
+              :label="item.value"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="流程类型">
+        <el-form-item label="客户名">
           <el-input
-            v-model="searchInfo.flowType"
-            placeholder="流程类型"
+            v-model="searchInfo.ClusterName"
+            placeholder="客户名"
           />
         </el-form-item>
         <el-form-item>
@@ -218,12 +229,13 @@ import { useUserStore } from '@/pinia/modules/user'
 import { formatDate } from '@/utils/format'
 
 const userStore = useUserStore()
+
 const CloudTypeOption = ref([{
   value: '腾讯云'
 }, {
   value: '阿里云'
 }, {
-  value: '亚马逊云'
+  value: 'AWS'
 }])
 
 const router = useRouter()

@@ -10,10 +10,6 @@
           style="width: 20%;"
           label="云厂商"
         >
-          <!-- <el-input
-            v-model="searchInfo.CloudType"
-            placeholder="云厂商"
-          /> -->
           <el-select
             v-model="searchInfo.CloudType"
             placeholder="云厂商"
@@ -125,32 +121,9 @@ import {
   getAssetsList,
 } from '@/api/cmdb'
 import { ref } from 'vue'
-// import { ElMessage, ElMessageBox } from 'element-plus'
 
 defineOptions({
   name: 'Assets',
-})
-
-const form = ref({
-  CloudType: '',
-  InstanceID: '',
-  InstanceName: '',
-  InstanceType: '',
-  PublicIP: '',
-  PrivateIP: '',
-})
-
-const rules = ref({
-  // path: [{ required: true, message: '请输入api路径', trigger: 'blur' }],
-  // apiGroup: [
-  //   { required: true, message: '请输入组名称', trigger: 'blur' }
-  // ],
-  // method: [
-  //   { required: true, message: '请选择请求方式', trigger: 'blur' }
-  // ],
-  // description: [
-  //   { required: true, message: '请输入api介绍', trigger: 'blur' }
-  // ]
 })
 
 const cloudTypeList = ref([

@@ -106,9 +106,7 @@ func (w WorkFlowTemplateService) GetTemplateStatusList(status cmdb.WorkFlowStatu
 }
 
 func (w WorkFlowTemplateService) CreateTemplateStatus(status cmdb.WorkFlowStatus) error {
-	if !errors.Is(global.GVA_DB.Where("status_name = ? ", status.StatusName).First(&cmdb.WorkFlowStatus{}).Error, gorm.ErrRecordNotFound) {
-		return errors.New("存在相同状态名称 ")
-	}
+
 	return global.GVA_DB.Create(&status).Error
 }
 
@@ -189,9 +187,7 @@ func (w WorkFlowTemplateService) GetCircleList(circle cmdb.WorkFlowCircle, info 
 }
 
 func (w WorkFlowTemplateService) CreateCircle(circle cmdb.WorkFlowCircle) error {
-	if !errors.Is(global.GVA_DB.Where("circle_name = ? ", circle.CircleName).First(&cmdb.WorkFlowCircle{}).Error, gorm.ErrRecordNotFound) {
-		return errors.New("存在相同状态名称 ")
-	}
+
 	return global.GVA_DB.Create(&circle).Error
 }
 

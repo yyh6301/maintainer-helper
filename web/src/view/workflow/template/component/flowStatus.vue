@@ -307,10 +307,10 @@ const form = ref({
   statusType: '',
   approvalType: '',
   approvalUser: '',
-  templateID: '',
+  templateID: Number(templateid.value),
   orderNumber: 0
 })
-form.value.templateID = Number(templateid.value)
+
 const type = ref('')
 const statusForm = ref(null)
 

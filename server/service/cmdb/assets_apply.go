@@ -25,6 +25,14 @@ func (w AssetsApplyService) GetAssetsApplyList(cloudApply cmdb.CloudApply, info 
 	offset := info.PageSize * (info.Page - 1)
 	db := global.GVA_DB.Model(&cmdb.CloudApply{})
 
+	if cloudApply.CloudType != "" {
+		db = db.Where("cloud_type = ?", cloudApply.CloudType)
+	}
+
+	if cloudApply.ClusterName != "" {
+		db = db.Where("cluster_name like ?", "%"+cloudApply.ClusterName+"%")
+	}
+
 	err = db.Count(&total).Error
 	if err != nil {
 		return nil, 0, err
