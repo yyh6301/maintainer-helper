@@ -24,3 +24,8 @@ type SearchAssetsTransferParams struct {
 	cmdb.CloudTransfer
 	request.PageInfo
 }
+
+type CreateTransferParams struct {
+	cmdb.CloudTransfer
+	InstanceList interface{} `json:"instanceList"`
+}

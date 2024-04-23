@@ -243,7 +243,6 @@ const page = ref(1)
 const total = ref(0)
 const pageSize = ref(10)
 const searchInfo = ref({})
-searchInfo.value.templateID = Number(templateid.value)
 
 const onReset = () => {
   searchInfo.value = {}
@@ -268,6 +267,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async() => {
+  searchInfo.value.templateID = Number(templateid.value)
   const table = await getTemplateStatusList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
 
   if (table.code === 0) {
@@ -321,6 +321,7 @@ const initForm = () => {
     statusType: '',
     approvalType: '',
     approvalUser: '',
+    templateID: Number(templateid.value),
     orderNumber: 0
   }
 }

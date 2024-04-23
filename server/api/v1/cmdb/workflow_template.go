@@ -21,11 +21,13 @@ func (a *WorkFlowTemplateApi) GetWorkFlowTemplateList(c *gin.Context) {
 	if err != nil {
 		global.GVA_LOG.Error("获取查询参数失败!", zap.Any("err", err))
 		response.FailWithMessage("获取查询参数失败", c)
+		return
 	}
 	list, total, err := workflowTemplateService.GetWorkFlowTemplateList(pageInfo.WorkFlowTemplate, pageInfo.PageInfo)
 	if err != nil {
 		global.GVA_LOG.Error("获取工作流模板列表失败!", zap.Any("err", err))
 		response.FailWithMessage("获取工作流模板列表失败", c)
+		return
 	}
 	response.OkWithDetailed(response.PageResult{
 		List:     list,
@@ -40,10 +42,12 @@ func (a *WorkFlowTemplateApi) CreateWorkFlowTemplate(c *gin.Context) {
 	err := c.ShouldBindJSON(&workflowTemplate)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
-	err = utils.Verify(workflowTemplate, utils.WorkFlowTemplateVerify)
+	//err = utils.Verify(workflowTemplate, utils.WorkFlowTemplateVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = workflowTemplateService.CreateWorkFlowTemplate(workflowTemplate)
 	if err != nil {
@@ -59,10 +63,12 @@ func (a *WorkFlowTemplateApi) UpdateWorkFlowTemplate(c *gin.Context) {
 	err := c.ShouldBindJSON(&workflowTemplate)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
-	err = utils.Verify(workflowTemplate, utils.WorkFlowTemplateVerify)
+	//err = utils.Verify(workflowTemplate, utils.WorkFlowTemplateVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = workflowTemplateService.UpdateWorkFlowTemplate(workflowTemplate)
 	if err != nil {
@@ -78,10 +84,12 @@ func (a *WorkFlowTemplateApi) DeleteWorkFlowTemplate(c *gin.Context) {
 	err := c.ShouldBindJSON(&workflowTemplate)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = utils.Verify(workflowTemplate, utils.IdVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = workflowTemplateService.DeleteWorkFlowTemplate(workflowTemplate)
 	if err != nil {
@@ -97,10 +105,12 @@ func (a *WorkFlowTemplateApi) GetWorkFlowTemplateById(c *gin.Context) {
 	err := c.ShouldBindJSON(&workflowTemplate)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = utils.Verify(workflowTemplate, utils.IdVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	workflow, err := workflowTemplateService.GetWorkFlowTemplateById(workflowTemplate)
 	if err != nil {
@@ -118,11 +128,13 @@ func (a *WorkFlowTemplateApi) GetTemplateStatus(c *gin.Context) {
 	if err != nil {
 		global.GVA_LOG.Error("获取查询参数失败!", zap.Any("err", err))
 		response.FailWithMessage("获取查询参数失败", c)
+		return
 	}
 	list, total, err := workflowTemplateService.GetTemplateStatusList(pageInfo.WorkFlowStatus, pageInfo.PageInfo)
 	if err != nil {
 		global.GVA_LOG.Error("获取工作流模板列表失败!", zap.Any("err", err))
 		response.FailWithMessage("获取工作流模板列表失败", c)
+		return
 	}
 	response.OkWithDetailed(response.PageResult{
 		List:     list,
@@ -137,10 +149,12 @@ func (a *WorkFlowTemplateApi) CreateTemplateStatus(c *gin.Context) {
 	err := c.ShouldBindJSON(&templateStatus)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
-	err = utils.Verify(templateStatus, utils.WorkFlowStatusVerify)
+	//err = utils.Verify(templateStatus, utils.WorkFlowStatusVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = workflowTemplateService.CreateTemplateStatus(templateStatus)
 	if err != nil {
@@ -156,10 +170,12 @@ func (a *WorkFlowTemplateApi) UpdateTemplateStatus(c *gin.Context) {
 	err := c.ShouldBindJSON(&templateStatus)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = utils.Verify(templateStatus, utils.WorkFlowStatusVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = workflowTemplateService.UpdateTemplateStatus(templateStatus)
 	if err != nil {
@@ -175,10 +191,12 @@ func (a *WorkFlowTemplateApi) DeleteTemplateStatus(c *gin.Context) {
 	err := c.ShouldBindJSON(&templateStatus)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = utils.Verify(templateStatus, utils.IdVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = workflowTemplateService.DeleteTemplateStatus(templateStatus)
 	if err != nil {
@@ -194,15 +212,18 @@ func (a *WorkFlowTemplateApi) GetTemplateStatusById(c *gin.Context) {
 	err := c.ShouldBindJSON(&status)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = utils.Verify(status, utils.IdVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	workflow, err := workflowTemplateService.GetTemplateStatusById(status)
 	if err != nil {
 		global.GVA_LOG.Error("获取流程状态信息失败,请重试!", zap.Error(err))
 		response.FailWithMessage("获取流程状态失败", c)
+		return
 	}
 	response.OkWithDetailed(workflow, "获取流程状态成功", c)
 }
@@ -215,11 +236,13 @@ func (a *WorkFlowTemplateApi) GetCircleList(c *gin.Context) {
 	if err != nil {
 		global.GVA_LOG.Error("获取查询参数失败!", zap.Any("err", err))
 		response.FailWithMessage("获取查询参数失败", c)
+		return
 	}
 	list, total, err := workflowTemplateService.GetCircleList(pageInfo.WorkFlowCircle, pageInfo.PageInfo)
 	if err != nil {
 		global.GVA_LOG.Error("获取工作流模板列表失败!", zap.Any("err", err))
 		response.FailWithMessage("获取工作流模板列表失败", c)
+		return
 	}
 	response.OkWithDetailed(response.PageResult{
 		List:     list,
@@ -234,10 +257,12 @@ func (a *WorkFlowTemplateApi) CreateCircle(c *gin.Context) {
 	err := c.ShouldBindJSON(&circle)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = utils.Verify(circle, utils.WorkFlowCircleVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = workflowTemplateService.CreateCircle(circle)
 	if err != nil {
@@ -253,10 +278,12 @@ func (a *WorkFlowTemplateApi) UpdateCircle(c *gin.Context) {
 	err := c.ShouldBindJSON(&circle)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	//err = utils.Verify(circle, utils.WorkFlowStatusVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = workflowTemplateService.UpdateCircle(circle)
 	if err != nil {
@@ -272,10 +299,12 @@ func (a *WorkFlowTemplateApi) DeleteCircle(c *gin.Context) {
 	err := c.ShouldBindJSON(&circle)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = utils.Verify(circle, utils.IdVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = workflowTemplateService.DeleteCircle(circle)
 	if err != nil {
@@ -291,10 +320,12 @@ func (a *WorkFlowTemplateApi) GetCircleById(c *gin.Context) {
 	err := c.ShouldBindJSON(&circle)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = utils.Verify(circle, utils.IdVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	workflow, err := workflowTemplateService.GetCircleById(circle)
 	if err != nil {

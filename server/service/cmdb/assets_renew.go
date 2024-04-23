@@ -12,7 +12,10 @@ type AssetsRenewService struct {
 }
 
 func (w AssetsRenewService) CreateAssetsRenew(cloudRenew cmdb.CloudRenew) error {
-	//1. 使用事务，先插入云资源续费，再去调用工单申请的流程，把数据插入工单申请表
+	err := global.GVA_DB.Create(&cloudRenew).Error
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -21,10 +24,25 @@ func (w AssetsRenewService) GetAssetsRenewList(cloudRenew cmdb.CloudRenew, info 
 	offset := info.PageSize * (info.Page - 1)
 	db := global.GVA_DB.Model(&cmdb.CloudRenew{})
 
+	if cloudRenew.CloudType != "" {
+		db = db.Where("cloud_type = ? ", cloudRenew.CloudType)
+	}
+
+	if cloudRenew.InstanceName != "" {
+		db = db.Where("instance_name like ?", "%"+cloudRenew.InstanceName+"%")
+	}
+
+	if cloudRenew.InstanceType != "" {
+		db = db.Where("instance_type like ?", "%"+cloudRenew.InstanceType+"%")
+	}
+
 	err = db.Count(&total).Error
 	if err != nil {
 		return nil, 0, err
 	}
+	db = db.Preload("WorkFlowOrder")
+	db = db.Preload("WorkFlowOrder.WorkFlowStatus")
+
 	err = db.Limit(limit).Offset(offset).Find(&RenewList).Error
 	if err != nil {
 		return nil, 0, err
@@ -33,22 +51,29 @@ func (w AssetsRenewService) GetAssetsRenewList(cloudRenew cmdb.CloudRenew, info 
 }
 
 func (w AssetsRenewService) DeleteAssetsRenew(cloudRenew cmdb.CloudRenew) error {
-	var entity cmdb.CloudRenew
-	err := global.GVA_DB.Where("id = ?", entity.ID).First(&entity).Error // 根据id查询api记录
-	if errors.Is(err, gorm.ErrRecordNotFound) {                          // api记录不存在
-		return err
-	}
-	err = global.GVA_DB.Delete(&entity).Error
-	if err != nil {
-		return err
-	}
+	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+		var entity cmdb.CloudRenew
+		err := tx.Where("id = ?", cloudRenew.ID).First(&entity).Error // 根据id查询api记录
+		if errors.Is(err, gorm.ErrRecordNotFound) {                   // api记录不存在
+			return err
+		}
+		err = tx.Delete(&entity).Error
+		if err != nil {
+			return err
+		}
 
-	//删除工单及对应操作日志
-	var order cmdb.WorkFlowOrder
-	err = global.GVA_DB.Where("id = ?", entity.OrderID).First(&order).Error
-	err = global.GVA_DB.Delete(&order).Error
-	if err != nil {
-		return err
-	}
-	return nil
+		//删除工单及对应操作日志
+		var order cmdb.WorkFlowOrder
+		err = tx.Where("id = ?", entity.OrderID).First(&order).Error
+		err = tx.Delete(&order).Error
+		if err != nil {
+			return err
+		}
+
+		err = tx.Where("order_id = ? ", order.ID).Delete(&cmdb.WorkFlowOrderLog{}).Error
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 }

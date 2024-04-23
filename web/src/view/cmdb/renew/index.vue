@@ -6,16 +6,27 @@
         :inline="true"
         :model="searchInfo"
       >
-        <el-form-item label="云厂商">
-          <el-input
-            v-model="searchInfo.cloudType"
+        <el-form-item
+          style="width: 20%;"
+          label="云厂商"
+        >
+          <el-select
+            v-model="searchInfo.CloudType"
             placeholder="云厂商"
-          />
+            clearable
+          >
+            <el-option
+              v-for="(item,index) in CloudTypeOption"
+              :key="index"
+              :label="item.value"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="实例名">
+        <el-form-item label="实例名称">
           <el-input
             v-model="searchInfo.instanceName"
-            placeholder="实例名"
+            placeholder="实例名称"
           />
         </el-form-item>
         <el-form-item label="实例类型">
@@ -42,7 +53,7 @@
         type="primary"
         icon="plus"
         @click="handleAdd"
-      >新建工单</el-button>
+      >新建申请</el-button>
       <el-table
         :data="tableData"
         @selection-change="handleSelectionChange"
@@ -53,41 +64,56 @@
         />
         <el-table-column
           align="left"
-          label="云厂商"
+          label="id"
           min-width="60"
+          prop="ID"
+        />
+        <el-table-column
+          align="left"
+          label="厂商"
+          min-width="100"
           prop="cloudType"
         />
-
         <el-table-column
           align="left"
-          label="资源区域"
+          label="实例类型"
           min-width="100"
-          prop="zone"
+          prop="instanceType"
         />
         <el-table-column
           align="left"
-          label="产品名"
-          min-width="100"
-          prop="productName"
-        />
-        <el-table-column
-          align="left"
-          label="实例名"
+          label="实例名称"
           min-width="100"
           prop="instanceName"
         />
         <el-table-column
           align="left"
-          label="实例ID"
+          label="申请人"
           min-width="100"
-          prop="instanceId"
+          prop="applyer"
         />
         <el-table-column
           align="left"
-          label="负责人"
+          label="续费时间"
           min-width="100"
-          prop="owner"
+          prop="renewTime"
         />
+        <el-table-column
+          align="middle"
+          label="申请时间"
+          min-width="100"
+        >
+          <template #default="scope">{{ formatDate(scope.row.CreatedAt) }}</template>
+        </el-table-column>
+        <el-table-column
+          align="left"
+          label="工单状态"
+          width="120"
+        >
+          <template #default="{ row }">
+            <el-tag>{{ row.workFlowOrder.workFlowStatus.statusName }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
           align="left"
           fixed="right"
@@ -101,17 +127,10 @@
               link
               @click="handleEdit(scope.row)"
             >
-              查看工单
+              查看工单详情
             </el-button>
             <el-button
-              icon="edit"
-              type="primary"
-              link
-              @click="handleEdit(scope.row)"
-            >
-              编辑工单
-            </el-button>
-            <el-button
+              v-show="userStore.userInfo.isAdmin"
               icon="delete"
               type="primary"
               link
@@ -134,48 +153,99 @@
         />
       </div>
     </div>
+    <el-dialog
+      v-model="dialogFormVisible"
+      :before-close="closeDialog"
+      :title="dialogTitle"
+    >
+
+      <el-form
+        :model="dialogForm"
+        label-width="80px"
+      >
+        <div style="display: flex">
+
+          <el-form-item
+            label="厂商"
+            style="width:30%"
+          >
+            <el-select
+              v-model="form.cloudType"
+              placeholder="请选择厂商"
+            >
+              <el-option
+                v-for="(item, index) in CloudTypeOption"
+                :key="index"
+                :label="item.value"
+                :value="item.value"
+              />
+
+            </el-select>
+          </el-form-item>
+        </div>
+
+        <v-form-render
+          ref="vFormRef"
+          :form-json="formJson"
+          :form-data="formData"
+          :option-data="optionData"
+        />
+
+        <el-form-item
+          label="续费原因"
+        >
+          <el-input
+            v-model="form.applyReason"
+            type="textarea"
+            placeholder="请输入续费原因"
+          />
+        </el-form-item>
+
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="closeDialog">取 消</el-button>
+          <el-button
+            type="primary"
+            @click="enterDialog"
+          >确 定</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import {
-  //   getWorkflowTemplateList,
-  deleteWorkflowTemplate,
+  getWorkflowTemplateById,
 } from '@/api/workflow'
-
+import {
+  getRenewList,
+  createRenew,
+  deleteRenew,
+} from '@/api/cmdb'
+import { VFormRender } from 'vform3-builds'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
+import { useUserStore } from '@/pinia/modules/user'
+import { formatDate } from '@/utils/format'
 
-// import { ElMessage, ElMessageBox } from 'element-plus'
+const userStore = useUserStore()
+
+const CloudTypeOption = ref([{
+  value: '腾讯云'
+}, {
+  value: '阿里云'
+}, {
+  value: 'AWS'
+}])
 
 const router = useRouter()
 
 defineOptions({
-  name: 'WorkflowTemplate',
+  name: 'Renew',
 })
-
-// const form = ref({
-//   flowName: '',
-//   flowDesc: '',
-//   flowFormDetail: '',
-//   flowDetail: '',
-//   flowCreator: '',
-//   flowModifier: ''
-// })
-
-// const rules = ref({
-//   // path: [{ required: true, message: '请输入api路径', trigger: 'blur' }],
-//   // apiGroup: [
-//   //   { required: true, message: '请输入组名称', trigger: 'blur' }
-//   // ],
-//   // method: [
-//   //   { required: true, message: '请选择请求方式', trigger: 'blur' }
-//   // ],
-//   // description: [
-//   //   { required: true, message: '请输入api介绍', trigger: 'blur' }
-//   // ]
-// })
 
 const page = ref(1)
 const total = ref(0)
@@ -193,7 +263,7 @@ const onSubmit = () => {
   getTableData()
 }
 
-// // 分页
+// 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
   getTableData()
@@ -206,97 +276,108 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async() => {
-  // const table = await getWorkflowTemplateList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+  const table = await getRenewList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
 
-  // if (table.code === 0) {
-  //   tableData.value = table.data.list
-  //   total.value = table.data.total
-  //   page.value = table.data.page
-  //   pageSize.value = table.data.pageSize
-  // }
-  tableData.value = [
-    {
-      ID: 1,
-      cloudType: '阿里云',
-      zone: '华北',
-      productName: 'ECS',
-      instanceName: 'test',
-      instanceId: 'i-123456',
-      owner: '张三',
-    },
-    {
-      ID: 2,
-      cloudType: '腾讯云',
-      zone: '华南',
-      productName: 'CVM',
-      instanceName: 'test',
-      instanceId: 'i-123456',
-      owner: '李四',
-    },
-    {
-      ID: 3,
-      cloudType: '阿里云',
-      zone: '华东',
-      productName: 'RDS',
-      instanceName: 'test',
-      instanceId: 'i-123456',
-      owner: '王五',
-    },
-  ]
-}
-
-const statusOptions = ref([
-  {
-    value: 0,
-    label: '未处理',
-    color: 'info',
-  },
-  {
-    value: 1,
-    label: '同意',
-    color: 'primary',
-  },
-  {
-    value: 2,
-    label: '拒绝',
-    color: 'danger',
+  if (table.code === 0) {
+    tableData.value = table.data.list
+    total.value = table.data.total
+    page.value = table.data.page
+    pageSize.value = table.data.pageSize
   }
-])
-
-const getStatusColor = (type) => {
-  const item = statusOptions.value.find(item => item.value === type)
-  return item ? item.color : ''
-}
-
-const getStatusLabel = (type) => {
-  const item = statusOptions.value.find(item => item.value === type)
-  return item ? item.label : ''
 }
 
 getTableData()
+const dialogTitle = ref('')
+const dialogForm = ref(null)
+const dialogFormVisible = ref(false)
+const form = ref({
+  cloudType: '',
+  instanceName: '',
+  instanceType: '',
+  applyer: '',
+  renewTime: '',
+  orderID: 0,
+  workFlowOrder: {
+    orderDetail: '',
+    templateID: 16,
+  }
+})
 
-const handleAdd = () => {
-  router.replace({ name: 'templateDetail' })
+const closeDialog = () => {
+  form.value = {
+    cloudType: '',
+    instanceName: '',
+    instanceType: '',
+    applyer: '',
+    renewTime: '',
+    orderID: 0,
+    workFlowOrder: {
+      orderDetail: '',
+      templateID: 16,
+    }
+  }
+  dialogFormVisible.value = false
+}
+
+const enterDialog = () => {
+  vFormRef.value.getFormData().then(async(formData) => {
+    form.value.applyer = userStore.userInfo.userName
+    form.value.workFlowOrder.orderDetail = JSON.stringify(formData)
+    console.log(form.value)
+    const res = await createRenew(form.value)
+    if (res.code === 0) {
+      ElMessage.success(res.msg)
+    }
+    closeDialog()
+    getTableData()
+  }).catch(error => {
+    ElMessage.error(error)
+  })
+}
+
+const formJson = reactive({ 'widgetList': [], 'formConfig': { 'modelName': 'formData', 'refName': 'vForm', 'rulesName': 'rules', 'labelWidth': 80, 'labelPosition': 'left', 'size': '', 'labelAlign': 'label-left-align', 'cssCode': '', 'customClass': '', 'functions': '', 'layoutType': 'PC', 'jsonVersion': 3, 'onFormCreated': '', 'onFormMounted': '', 'onFormDataChange': '', 'onFormValidate': '' }})
+
+const formData = reactive({})
+const optionData = reactive({})
+const vFormRef = ref(null)
+// 根据templateid找到对应模板的form json
+const getVFormJson = async() => {
+  const res = await getWorkflowTemplateById({ id: form.value.workFlowOrder.templateID })
+  if (res.code === 0) {
+    form.value.formDetail = res.data.flowFormDetail
+  }
+}
+const handleAdd = async() => {
+  dialogFormVisible.value = true
+  dialogTitle.value = '新建续费'
+  await getVFormJson()
+  setTimeout(() => {
+    if (vFormRef.value !== null) {
+      vFormRef.value.setFormJson(form.value.formDetail)
+    }
+  }, 100) // 延迟 1000 毫秒后执行
 }
 
 const handleEdit = (row) => {
+  var orderName = row.cloudType + '机器续费-' + row.instanceName
   router.replace({
-    name: 'templateDetail',
+    name: 'orderDetail',
     query: {
-      id: row.ID,
-      name: row.flowName
+      orderId: row.orderID,
+      orderName: orderName
     }
   })
 }
 
 const handleDelete = (row) => {
-  ElMessageBox.confirm('是否删除该工作流模板?', '提示', {
+  ElMessageBox.confirm('是否删除此次续费?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   })
     .then(async() => {
-      const res = await deleteWorkflowTemplate(row)
+      console.log(row)
+      const res = await deleteRenew(row)
       if (res.code === 0) {
         ElMessage({
           type: 'success',
@@ -306,14 +387,16 @@ const handleDelete = (row) => {
           page.value--
         }
         getTableData()
+      } else {
+        ElMessage.warning(res.msg)
       }
     })
 }
 
 </script>
 
-      <style scoped lang="scss">
-      .warning {
-        color: #dc143c;
-      }
-      </style>
+  <style scoped lang="scss">
+  .warning {
+    color: #dc143c;
+  }
+  </style>

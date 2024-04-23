@@ -274,7 +274,6 @@ const page = ref(1)
 const total = ref(0)
 const pageSize = ref(10)
 const searchInfo = ref({})
-searchInfo.value.templateID = Number(templateid.value)
 
 const onReset = () => {
   searchInfo.value = {}
@@ -311,6 +310,7 @@ getCircleOptions()
 
 // 查询
 const getTableData = async() => {
+  searchInfo.value.templateID = Number(templateid.value)
   const table = await getCircleList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
 
   if (table.code === 0) {

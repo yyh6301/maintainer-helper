@@ -21,11 +21,13 @@ func (a *AssetsApplyApi) GetAssetsApplyList(c *gin.Context) {
 	if err != nil {
 		global.GVA_LOG.Error("获取查询参数失败!", zap.Any("err", err))
 		response.FailWithMessage("获取查询参数失败", c)
+		return
 	}
 	list, total, err := applyService.GetAssetsApplyList(pageInfo.CloudApply, pageInfo.PageInfo)
 	if err != nil {
 		global.GVA_LOG.Error("获取工作流模板列表失败!", zap.Any("err", err))
 		response.FailWithMessage("获取工作流模板列表失败", c)
+		return
 	}
 	response.OkWithDetailed(response.PageResult{
 		List:     list,
@@ -52,6 +54,7 @@ func (a *AssetsApplyApi) CreateAssetsApply(c *gin.Context) {
 	if !ok {
 		global.GVA_LOG.Warn("申请工单时instance_name字段不存在")
 		response.FailWithMessage("instance_name字段为空", c)
+		return
 	}
 	cloudApply.InstanceName = instanceName
 
@@ -86,10 +89,12 @@ func (a *AssetsApplyApi) DeleteAssetsApply(c *gin.Context) {
 	err := c.ShouldBindJSON(&cloudApply)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = utils.Verify(cloudApply, utils.IdVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = applyService.DeleteAssetsApply(cloudApply)
 	if err != nil {

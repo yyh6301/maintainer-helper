@@ -6,16 +6,16 @@
         :inline="true"
         :model="searchInfo"
       >
-        <el-form-item label="提单人搜索">
+        <el-form-item label="转让人">
           <el-input
-            v-model="searchInfo.owner"
-            placeholder="提单人搜索"
+            v-model="searchInfo.Owner"
+            placeholder="转让人"
           />
         </el-form-item>
-        <el-form-item label="接单人搜索">
+        <el-form-item label="接收人">
           <el-input
-            v-model="searchInfo.toOwner"
-            placeholder="接单人搜索"
+            v-model="searchInfo.ToOwner"
+            placeholder="接收人"
           />
         </el-form-item>
         <el-form-item>
@@ -36,7 +36,7 @@
         type="primary"
         icon="plus"
         @click="handleAdd"
-      >新建工单</el-button>
+      >转让机器</el-button>
       <el-table
         :data="tableData"
         @selection-change="handleSelectionChange"
@@ -47,42 +47,50 @@
         />
         <el-table-column
           align="left"
-          label="工单ID"
+          label="id"
           min-width="60"
           prop="ID"
         />
-
         <el-table-column
           align="left"
-          label="提单人"
+          label="厂商"
+          min-width="100"
+          prop="cloudType"
+        />
+        <el-table-column
+          align="left"
+          label="转让人"
           min-width="100"
           prop="owner"
         />
         <el-table-column
           align="left"
-          label="接受人"
+          label="接收人"
           min-width="100"
           prop="toOwner"
         />
         <el-table-column
           align="left"
-          label="状态"
+          label="转让数量 "
           min-width="100"
-          prop="status"
+          prop="count"
+        />
+        <el-table-column
+          align="middle"
+          label="申请时间"
+          min-width="100"
         >
-          <template #default="{ row }">
-            <el-tag
-              :type="getStatusColor(row.status)"
-            >{{ getStatusLabel(row.status) }}</el-tag>
-          </template>
+          <template #default="scope">{{ formatDate(scope.row.CreatedAt) }}</template>
         </el-table-column>
-
         <el-table-column
           align="left"
-          label="机器数"
-          min-width="100"
-          prop="machineNumber"
-        />
+          label="工单状态"
+          width="120"
+        >
+          <template #default="{ row }">
+            <el-tag>{{ row.workFlowOrder.workFlowStatus.statusName }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
           align="left"
           fixed="right"
@@ -96,17 +104,10 @@
               link
               @click="handleEdit(scope.row)"
             >
-              查看工单
+              查看工单详情
             </el-button>
             <el-button
-              icon="edit"
-              type="primary"
-              link
-              @click="handleEdit(scope.row)"
-            >
-              审批工单
-            </el-button>
-            <el-button
+              v-show="userStore.userInfo.isAdmin"
               icon="delete"
               type="primary"
               link
@@ -129,48 +130,157 @@
         />
       </div>
     </div>
+    <el-dialog
+      v-model="dialogFormVisible"
+      :before-close="closeDialog"
+      :title="dialogTitle"
+    >
+
+      <el-form
+        :model="dialogForm"
+        label-width="80px"
+      >
+        <div style="display: flex">
+
+          <el-form-item
+            label="云厂商"
+            style="width:30%"
+          >
+            <el-select
+              v-model="form.cloudType"
+              placeholder="请选择厂商"
+            >
+              <el-option
+                v-for="(item, index) in CloudTypeOption"
+                :key="index"
+                :label="item.value"
+                :value="item.value"
+              />
+
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            label="转让人"
+            style="width: 30%;"
+          >
+            <el-select
+              v-model="form.owner"
+              placeholder="请选择转让人"
+            >
+              <el-option
+                v-for="(item, index) in UserList"
+                :key="index"
+                :label="item.userName"
+                :value="item.userName"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            label="接收人"
+            style="width: 30%;"
+          >
+            <el-select
+              v-model="form.toOwner"
+              placeholder="请选择接收人"
+            >
+              <el-option
+                v-for="(item, index) in UserList"
+                :key="index"
+                :label="item.userName"
+                :value="item.userName"
+              />
+            </el-select>
+          </el-form-item>
+        </div>
+        <el-table
+          ref="multipleTableRef"
+          :data="dialogTableData"
+          style="
+          margin-top:20px;
+          width: 600px;
+          height:300px"
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column
+            type="selection"
+            width="55"
+          />
+          <el-table-column
+            label="实例名称"
+            property="instanceName"
+          />
+          <el-table-column
+            property="instanceType"
+            label="实例类型"
+          />
+
+        </el-table>
+
+        <el-form-item
+          style="margin-top:20px"
+          label="转让原因"
+        >
+          <el-input
+            v-model="form.applyReason"
+            type="textarea"
+            placeholder="请输入转让原因"
+          />
+        </el-form-item>
+
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="closeDialog">取 消</el-button>
+          <el-button
+            type="primary"
+            @click="enterDialog"
+          >确 定</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import {
-  //   getWorkflowTemplateList,
-  deleteWorkflowTemplate,
-} from '@/api/workflow'
-
+  getTransferList,
+  createTransfer,
+  deleteTransfer,
+  getAssetsList,
+} from '@/api/cmdb'
+import {
+  getUserList
+} from '@/api/user'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
+import { useUserStore } from '@/pinia/modules/user'
+import { formatDate } from '@/utils/format'
 
-// import { ElMessage, ElMessageBox } from 'element-plus'
+const userStore = useUserStore()
+const multipleTableRef = ref(null)
+const multipleSelection = ref([])
+
+const handleSelectionChange = (val) => {
+  multipleSelection.value = val
+}
+
+const dialogTableData = ref([])
+const UserList = ref([])
+
+const CloudTypeOption = ref([{
+  value: '腾讯云'
+}, {
+  value: '阿里云'
+}, {
+  value: 'AWS'
+}])
 
 const router = useRouter()
 
 defineOptions({
-  name: 'WorkflowTemplate',
+  name: 'Transfer',
 })
-
-// const form = ref({
-//   flowName: '',
-//   flowDesc: '',
-//   flowFormDetail: '',
-//   flowDetail: '',
-//   flowCreator: '',
-//   flowModifier: ''
-// })
-
-// const rules = ref({
-//   // path: [{ required: true, message: '请输入api路径', trigger: 'blur' }],
-//   // apiGroup: [
-//   //   { required: true, message: '请输入组名称', trigger: 'blur' }
-//   // ],
-//   // method: [
-//   //   { required: true, message: '请选择请求方式', trigger: 'blur' }
-//   // ],
-//   // description: [
-//   //   { required: true, message: '请输入api介绍', trigger: 'blur' }
-//   // ]
-// })
 
 const page = ref(1)
 const total = ref(0)
@@ -188,7 +298,7 @@ const onSubmit = () => {
   getTableData()
 }
 
-// // 分页
+// 分页
 const handleSizeChange = (val) => {
   pageSize.value = val
   getTableData()
@@ -201,140 +311,105 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async() => {
-  // const table = await getWorkflowTemplateList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
+  const table = await getTransferList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
 
-  // if (table.code === 0) {
-  //   tableData.value = table.data.list
-  //   total.value = table.data.total
-  //   page.value = table.data.page
-  //   pageSize.value = table.data.pageSize
-  // }
-  tableData.value = [
-    {
-      ID: 1,
-      owner: '张三',
-      toOwner: '李四',
-      status: 0,
-      machineNumber: 1
-    },
-    {
-      ID: 2,
-      owner: '李四',
-      toOwner: '张三',
-      status: 0,
-      machineNumber: 2
-    },
-    {
-      ID: 3,
-      owner: '张三',
-      toOwner: '王五',
-      status: 1,
-      machineNumber: 1
-    },
-    {
-      ID: 4,
-      owner: '张三',
-      toOwner: '李四',
-      status: 2,
-      machineNumber: 1
-    },
-    {
-      ID: 5,
-      owner: '张三',
-      toOwner: '李四',
-      status: 2,
-      machineNumber: 1
-    },
-    {
-      ID: 6,
-      owner: '张三',
-      toOwner: '李四',
-      status: 1,
-      machineNumber: 1
-    },
-    {
-      ID: 7,
-      owner: '张三',
-      toOwner: '李四',
-      status: 0,
-      machineNumber: 1
-    },
-    {
-      ID: 8,
-      owner: '张三',
-      toOwner: '李四',
-      status: 0,
-      machineNumber: 1
-    },
-    {
-      ID: 9,
-      owner: '张三',
-      toOwner: '李四',
-      status: 0,
-      machineNumber: 20
-    },
-    {
-      ID: 10,
-      owner: '张三',
-      toOwner: '赵六',
-      status: 0,
-      machineNumber: 5
-    }
-  ]
-}
-
-const statusOptions = ref([
-  {
-    value: 0,
-    label: '未处理',
-    color: 'info',
-  },
-  {
-    value: 1,
-    label: '同意',
-    color: 'primary',
-  },
-  {
-    value: 2,
-    label: '拒绝',
-    color: 'danger',
+  if (table.code === 0) {
+    tableData.value = table.data.list
+    total.value = table.data.total
+    page.value = table.data.page
+    pageSize.value = table.data.pageSize
   }
-])
-
-const getStatusColor = (type) => {
-  const item = statusOptions.value.find(item => item.value === type)
-  return item ? item.color : ''
-}
-
-const getStatusLabel = (type) => {
-  const item = statusOptions.value.find(item => item.value === type)
-  return item ? item.label : ''
 }
 
 getTableData()
+const dialogTitle = ref('')
+const dialogForm = ref(null)
+const dialogFormVisible = ref(false)
+const form = ref({
+  cloudType: '',
+  owner: '',
+  toOwner: '',
+  applyReason: '',
+  count: '',
+  orderID: 0,
+  instanceList: [],
+  workFlowOrder: {
+    orderDetail: '',
+    templateID: 19,
+  }
+})
 
-const handleAdd = () => {
-  router.replace({ name: 'templateDetail' })
+const closeDialog = () => {
+  form.value = {
+    cloudType: '',
+    owner: '',
+    toOwner: '',
+    applyReason: '',
+    count: '',
+    instanceList: [],
+    orderID: 0,
+    workFlowOrder: {
+      orderDetail: '',
+      templateID: 19,
+    }
+  }
+  dialogFormVisible.value = false
+}
+
+const enterDialog = async() => {
+  form.value.count = multipleSelection.value.length
+  form.value.applyer = userStore.userInfo.userName
+  console.log('test:', multipleSelection.value)
+  form.value.instanceList = multipleSelection.value
+  console.log(form.value)
+  const res = await createTransfer(form.value)
+  if (res.code === 0) {
+    ElMessage.success(res.msg)
+  }
+  closeDialog()
+  getTableData()
+}
+
+onMounted(async() => {
+  const res = await getUserList({ page: 1, pageSize: 999 })
+  if (res.code === 0) {
+    UserList.value = res.data.list
+  }
+})
+
+const getDialogTableData = async() => {
+  const res = await getAssetsList({ page: 1, pageSize: 999 })
+  if (res.code === 0) {
+    dialogTableData.value = res.data.list
+  }
+}
+
+const handleAdd = async() => {
+  dialogFormVisible.value = true
+  dialogTitle.value = '新建转让'
+  await getDialogTableData()
 }
 
 const handleEdit = (row) => {
+  var orderName = row.cloudType + '机器转让-' + row.instanceName
   router.replace({
-    name: 'templateDetail',
+    name: 'orderDetail',
     query: {
-      id: row.ID,
-      name: row.flowName
+      orderId: row.orderID,
+      orderName: orderName
     }
   })
 }
 
 const handleDelete = (row) => {
-  ElMessageBox.confirm('是否删除该工作流模板?', '提示', {
+  ElMessageBox.confirm('是否撤销此次转让?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   })
     .then(async() => {
-      const res = await deleteWorkflowTemplate(row)
+      console.log(row)
+      const res = await deleteTransfer(row)
       if (res.code === 0) {
         ElMessage({
           type: 'success',
@@ -344,14 +419,16 @@ const handleDelete = (row) => {
           page.value--
         }
         getTableData()
+      } else {
+        ElMessage.warning(res.msg)
       }
     })
 }
 
 </script>
 
-      <style scoped lang="scss">
-      .warning {
-        color: #dc143c;
-      }
-      </style>
+  <style scoped lang="scss">
+  .warning {
+    color: #dc143c;
+  }
+  </style>

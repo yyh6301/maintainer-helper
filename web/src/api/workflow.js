@@ -144,6 +144,22 @@ export const createWorkflowOrder = (data) => {
   })
 }
 
+export const updateOrder = (data) => {
+  return service({
+    url: '/workflow/updateOrder',
+    method: 'post',
+    data: data,
+  })
+}
+
+export const deleteOrder = (data) => {
+  return service({
+    url: '/workflow/deleteOrder',
+    method: 'delete',
+    data: data,
+  })
+}
+
 export const handleOrderApi = (data) => {
   return service({
     url: '/workflow/handleOrder',

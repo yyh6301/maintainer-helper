@@ -106,7 +106,6 @@ func (w WorkFlowTemplateService) GetTemplateStatusList(status cmdb.WorkFlowStatu
 }
 
 func (w WorkFlowTemplateService) CreateTemplateStatus(status cmdb.WorkFlowStatus) error {
-
 	return global.GVA_DB.Create(&status).Error
 }
 

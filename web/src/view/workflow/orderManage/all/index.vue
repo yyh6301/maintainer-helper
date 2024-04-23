@@ -98,6 +98,13 @@
               type="text"
               @click="handleDetail(row)"
             >详情</el-button>
+            <el-button
+              v-show="userStore.userInfo.isAdmin"
+              type="text"
+              @click="handleDelete(row)"
+            >
+              删除
+            </el-button>
           </template>
         </el-table-column>
 
@@ -119,12 +126,36 @@
 
 <script setup>
 import {
-  getOrderList
+  getOrderList,
+  deleteOrder
 } from '@/api/workflow'
 import { ref } from 'vue'
+import { useUserStore } from '@/pinia/modules/user'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-// import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
+
+const userStore = useUserStore()
+const handleDelete = (row) => {
+  ElMessageBox.confirm('是否删除该工单?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(async() => {
+      const res = await deleteOrder(row)
+      if (res.code === 0) {
+        ElMessage({
+          type: 'success',
+          message: '删除成功!'
+        })
+        if (tableData.value.length === 1 && page.value > 1) {
+          page.value--
+        }
+        getTableData()
+      }
+    })
+}
 
 const page = ref(1)
 const total = ref(0)

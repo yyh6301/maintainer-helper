@@ -1,13 +1,15 @@
 package cmdb
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/cmdb"
 	cmdbRequest "github.com/flipped-aurora/gin-vue-admin/server/model/cmdb/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
-	"github.com/flipped-aurora/gin-vue-admin/server/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"strconv"
 )
 
 type AssetsRenewApi struct {
@@ -43,6 +45,49 @@ func (a *AssetsRenewApi) CreateAssetsRenew(c *gin.Context) {
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 	}
+
+	var data map[string]interface{}
+	err = json.Unmarshal([]byte(cloudRenew.WorkFlowOrder.OrderDetail), &data)
+	instanceName, ok := data["instance_name"].(string)
+	if !ok {
+		global.GVA_LOG.Warn("申请工单时instance_name字段不存在")
+		response.FailWithMessage("instance_name字段为空", c)
+		return
+	}
+
+	instanceType, ok := data["instance_type"].(string)
+	if !ok {
+		global.GVA_LOG.Warn("申请工单时instance_type字段不存在")
+		response.FailWithMessage("instance_type字段为空", c)
+		return
+	}
+	renewTime, ok := data["renew_time"].(float64)
+	if !ok {
+		global.GVA_LOG.Warn("申请工单时time字段不存在")
+		response.FailWithMessage("time字段为空", c)
+		return
+	}
+	cloudRenew.RenewTime = strconv.Itoa(int(renewTime))
+	cloudRenew.InstanceType = instanceType
+	cloudRenew.InstanceName = instanceName
+
+	var order = &cmdb.WorkFlowOrder{
+		Title:         fmt.Sprintf("%s机器续费-%s", cloudRenew.CloudType, cloudRenew.InstanceName),
+		TemplateID:    cloudRenew.WorkFlowOrder.TemplateID,
+		OrderDetail:   cloudRenew.WorkFlowOrder.OrderDetail,
+		OrderCreator:  cloudRenew.Applyer,
+		OrderModifier: cloudRenew.Applyer,
+	}
+
+	err = workflowOrderService.CreateOrder(order)
+	if err != nil {
+		global.GVA_LOG.Error("创建工单失败!", zap.Error(err))
+		response.FailWithMessage("创建失败", c)
+		return
+	}
+	cloudRenew.OrderID = order.ID
+	cloudRenew.WorkFlowOrder.ID = order.ID
+
 	err = renewService.CreateAssetsRenew(cloudRenew)
 	if err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
@@ -57,10 +102,7 @@ func (a *AssetsRenewApi) DeleteAssetsRenew(c *gin.Context) {
 	err := c.ShouldBindJSON(&cloudRenew)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
-	}
-	err = utils.Verify(cloudRenew, utils.IdVerify)
-	if err != nil {
-		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	err = renewService.DeleteAssetsRenew(cloudRenew)
 	if err != nil {

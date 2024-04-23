@@ -23,6 +23,24 @@
       :option-data="optionData"
     />
 
+    <div
+      v-show="userStore.userInfo.isAdmin || canUserEdit"
+      style="margin-top: 20px;"
+    >
+      <el-button
+        type="danger"
+        @click="editForm()"
+      >
+        修改工单信息
+      </el-button>
+      <el-button
+        type="primary"
+        @click="submitFormEdit()"
+      >
+        提交工单信息修改
+      </el-button>
+    </div>
+
     <el-form v-show="UserHandle">
       <el-divider />
 
@@ -123,7 +141,7 @@
 <script setup>
 import { useUserStore } from '@/pinia/modules/user'
 import { useRoute, useRouter } from 'vue-router'
-import { getOrderDetail } from '@/api/workflow'
+import { getOrderDetail, updateOrder } from '@/api/workflow'
 import { ref, onMounted, reactive } from 'vue'
 import { VFormRender } from 'vform3-builds'
 import { formatDate } from '@/utils/format.js'
@@ -136,6 +154,7 @@ const form = ref({})
 const tableData = ref([])
 const userStore = useUserStore()
 const orderId = ref(0)
+const canUserEdit = ref(false)
 orderId.value = Number(route.query.orderId)
 const getOrderDetailData = async() => {
   console.log('route.query.orderId', route.query.orderId)
@@ -155,12 +174,35 @@ const getOrderDetailData = async() => {
   }
 }
 
+const editForm = () => {
+  vFormRef.value.enableForm()
+}
+
+const submitFormEdit = () => {
+  vFormRef.value.getFormData().then(async(formData) => {
+    const res = await updateOrder(
+      {
+        id: Number(route.query.orderId),
+        orderDetail: JSON.stringify(formData)
+      })
+    if (res.code === 0) {
+      ElMessage.success('修改成功')
+      getOrderDetailData()
+    }
+    vFormRef.value.disableForm()
+  })
+}
+
 onMounted(async() => {
   await getOrderDetailData()
   console.log(form.value.workFlowStatus)
   if (form.value.workFlowStatus.approvalUser !== userStore.userInfo.userName &&
   userStore.userInfo.userName !== 'admin') {
     UserHandle.value = false
+  }
+
+  if (form.value.workFlowStatus.statusType === 0 && orderCreator === userStore.userInfo.userName) {
+    canUserEdit.value = true
   }
 })
 
