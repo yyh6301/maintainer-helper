@@ -40,7 +40,7 @@ func (w AssetsApplyService) GetAssetsApplyList(cloudApply cmdb.CloudApply, info 
 	db = db.Preload("WorkFlowOrder")
 	db = db.Preload("WorkFlowOrder.WorkFlowStatus")
 
-	err = db.Limit(limit).Offset(offset).Find(&applyList).Error
+	err = db.Limit(limit).Offset(offset).Order("created_at DESC").Find(&applyList).Error
 	if err != nil {
 		return nil, 0, err
 	}

@@ -137,12 +137,15 @@
     >
 
       <el-form
-        :model="dialogForm"
+        ref="dialogForm"
+        :rules="rules"
+        :model="form"
         label-width="80px"
       >
         <div style="display: flex">
 
           <el-form-item
+            prop="cloudType"
             label="云厂商"
             style="width:30%"
           >
@@ -160,6 +163,7 @@
             </el-select>
           </el-form-item>
           <el-form-item
+            prop="owner"
             label="转让人"
             style="width: 30%;"
           >
@@ -176,6 +180,7 @@
             </el-select>
           </el-form-item>
           <el-form-item
+            prop="toOwner"
             label="接收人"
             style="width: 30%;"
           >
@@ -260,6 +265,7 @@ import { formatDate } from '@/utils/format'
 const userStore = useUserStore()
 const multipleTableRef = ref(null)
 const multipleSelection = ref([])
+const dialogForm = ref(null)
 
 const handleSelectionChange = (val) => {
   multipleSelection.value = val
@@ -267,6 +273,12 @@ const handleSelectionChange = (val) => {
 
 const dialogTableData = ref([])
 const UserList = ref([])
+
+const rules = ref({
+  cloudType: [{ required: true, message: '请输入云厂商', trigger: 'blur' }],
+  owner: [{ required: true, message: '请输入转让人', trigger: 'blur' }],
+  toOwner: [{ required: true, message: '请输入接收人', trigger: 'blur' }],
+})
 
 const CloudTypeOption = ref([{
   value: '腾讯云'
@@ -323,7 +335,6 @@ const getTableData = async() => {
 
 getTableData()
 const dialogTitle = ref('')
-const dialogForm = ref(null)
 const dialogFormVisible = ref(false)
 const form = ref({
   cloudType: '',
@@ -357,17 +368,23 @@ const closeDialog = () => {
 }
 
 const enterDialog = async() => {
-  form.value.count = multipleSelection.value.length
-  form.value.applyer = userStore.userInfo.userName
-  console.log('test:', multipleSelection.value)
-  form.value.instanceList = multipleSelection.value
-  console.log(form.value)
-  const res = await createTransfer(form.value)
-  if (res.code === 0) {
-    ElMessage.success(res.msg)
-  }
-  closeDialog()
-  getTableData()
+  dialogForm.value.validate(async valid => {
+    if (valid) {
+      form.value.count = multipleSelection.value.length
+      if (form.value.count === 0) {
+        ElMessage.warning('请选择转让的机器')
+        return
+      }
+      form.value.applyer = userStore.userInfo.userName
+      form.value.instanceList = multipleSelection.value
+      const res = await createTransfer(form.value)
+      if (res.code === 0) {
+        ElMessage.success(res.msg)
+      }
+      closeDialog()
+      getTableData()
+    }
+  })
 }
 
 onMounted(async() => {

@@ -43,13 +43,13 @@
               link
               @click="opdendrawer(scope.row)"
             >设置权限</el-button>
-            <el-button
+            <!-- <el-button
               icon="plus"
 
               type="primary"
               link
               @click="addAuthority(scope.row.authorityId)"
-            >新增子角色</el-button>
+            >新增子角色</el-button> -->
             <el-button
               icon="copy-document"
 
@@ -151,7 +151,7 @@
             @changeRow="changeRow"
           />
         </el-tab-pane>
-        <el-tab-pane label="角色api">
+        <!-- <el-tab-pane label="角色api">
           <Apis
             ref="apis"
             :row="activeRow"
@@ -165,7 +165,7 @@
             :row="activeRow"
             @changeRow="changeRow"
           />
-        </el-tab-pane>
+        </el-tab-pane> -->
       </el-tabs>
     </el-drawer>
   </div>
@@ -181,8 +181,8 @@ import {
 } from '@/api/authority'
 
 import Menus from '@/view/superAdmin/authority/components/menus.vue'
-import Apis from '@/view/superAdmin/authority/components/apis.vue'
-import Datas from '@/view/superAdmin/authority/components/datas.vue'
+// import Apis from '@/view/superAdmin/authority/components/apis.vue'
+// import Datas from '@/view/superAdmin/authority/components/datas.vue'
 import WarningBar from '@/components/warningBar/warningBar.vue'
 
 import { ref } from 'vue'

@@ -123,7 +123,7 @@
 
       <el-form
         ref="templateForm"
-        :model="templateForm"
+        :model="form"
         :rules="rules"
         label-width="80px"
       >
@@ -176,12 +176,14 @@ const userStore = useUserStore()
 
 // import { ElMessage, ElMessageBox } from 'element-plus'
 
+const rules = ref({
+  flowName: [{ required: true, message: '请输入流程名称', trigger: 'blur' }],
+})
 const router = useRouter()
 
 defineOptions({
   name: 'WorkflowTemplate',
 })
-
 
 const page = ref(1)
 const total = ref(0)

@@ -160,12 +160,15 @@
     >
 
       <el-form
-        :model="dialogForm"
+        ref="dialogForm"
+        :rules="rules"
+        :model="form"
         label-width="80px"
       >
         <div style="display: flex">
 
           <el-form-item
+            prop="cloudType"
             label="厂商"
             style="width:30%"
           >
@@ -230,8 +233,11 @@ import { ref, reactive } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { useUserStore } from '@/pinia/modules/user'
 import { formatDate } from '@/utils/format'
-
+const dialogForm = ref(null)
 const userStore = useUserStore()
+const rules = ref({
+  cloudType: [{ required: true, message: '请输入云厂商', trigger: 'blur' }],
+})
 
 const CloudTypeOption = ref([{
   value: '腾讯云'
@@ -288,7 +294,6 @@ const getTableData = async() => {
 
 getTableData()
 const dialogTitle = ref('')
-const dialogForm = ref(null)
 const dialogFormVisible = ref(false)
 const form = ref({
   cloudType: '',
@@ -320,18 +325,22 @@ const closeDialog = () => {
 }
 
 const enterDialog = () => {
-  vFormRef.value.getFormData().then(async(formData) => {
-    form.value.applyer = userStore.userInfo.userName
-    form.value.workFlowOrder.orderDetail = JSON.stringify(formData)
-    console.log(form.value)
-    const res = await createRenew(form.value)
-    if (res.code === 0) {
-      ElMessage.success(res.msg)
+  dialogForm.value.validate(async valid => {
+    if (valid) {
+      vFormRef.value.getFormData().then(async(formData) => {
+        form.value.applyer = userStore.userInfo.userName
+        form.value.workFlowOrder.orderDetail = JSON.stringify(formData)
+        console.log(form.value)
+        const res = await createRenew(form.value)
+        if (res.code === 0) {
+          ElMessage.success(res.msg)
+        }
+        closeDialog()
+        getTableData()
+      }).catch(error => {
+        ElMessage.error(error)
+      })
     }
-    closeDialog()
-    getTableData()
-  }).catch(error => {
-    ElMessage.error(error)
   })
 }
 

@@ -131,7 +131,7 @@
     >
       <el-form
         ref="statusForm"
-        :model="statusForm"
+        :model="form"
         :rules="rules"
         label-width="80px"
       >
@@ -226,6 +226,12 @@ import {
 } from '@/api/workflow'
 defineOptions({
   name: 'FlowStatus'
+})
+
+const rules = ref({
+  statusName: [{ required: true, message: '请输入状态名称', trigger: 'blur' }],
+  statusType: [{ required: true, message: '请输入状态类型', trigger: 'blur' }],
+  approvalType: [{ required: true, message: '请输入审批类型', trigger: 'blur' }]
 })
 
 const props = defineProps({

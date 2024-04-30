@@ -42,7 +42,7 @@ func (w AssetsTransferService) GetAssetsTransferList(cloudTransfer cmdb.CloudTra
 	}
 	db = db.Preload("WorkFlowOrder")
 	db = db.Preload("WorkFlowOrder.WorkFlowStatus")
-	err = db.Limit(limit).Offset(offset).Find(&TransferList).Error
+	err = db.Limit(limit).Offset(offset).Order("created_at DESC").Find(&TransferList).Error
 	if err != nil {
 		return nil, 0, err
 	}

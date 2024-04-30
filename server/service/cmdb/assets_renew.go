@@ -43,7 +43,7 @@ func (w AssetsRenewService) GetAssetsRenewList(cloudRenew cmdb.CloudRenew, info 
 	db = db.Preload("WorkFlowOrder")
 	db = db.Preload("WorkFlowOrder.WorkFlowStatus")
 
-	err = db.Limit(limit).Offset(offset).Find(&RenewList).Error
+	err = db.Limit(limit).Offset(offset).Order("created_at DESC").Find(&RenewList).Error
 	if err != nil {
 		return nil, 0, err
 	}

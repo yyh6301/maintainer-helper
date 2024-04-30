@@ -163,7 +163,7 @@
     >
       <el-form
         ref="CircleForm"
-        :model="CircleForm"
+        :model="form"
         :rules="rules"
         label-width="80px"
       >
@@ -178,7 +178,7 @@
         </el-form-item>
         <el-form-item
           label="源状态"
-          prop="SourceID"
+          prop="sourceID"
         >
           <el-select
             v-model="form.sourceID"
@@ -195,7 +195,7 @@
         </el-form-item>
         <el-form-item
           label="目标状态"
-          prop="TargetID"
+          prop="targetID"
         >
           <el-select
             v-model="form.targetID"
@@ -212,7 +212,7 @@
         </el-form-item>
         <el-form-item
           label="属性类型"
-          prop="AttributeType"
+          prop="attributeType"
         >
           <el-select
             v-model="form.attributeType"
@@ -268,6 +268,13 @@ const props = defineProps({
 })
 // 使用父组件传递过来的值
 const { templateid } = toRefs(props)
+
+const rules = ref({
+  circleName: [{ required: true, message: '请输入流转名称', trigger: 'blur' }],
+  sourceID: [{ required: true, message: '请输入源状态', trigger: 'blur' }],
+  targetID: [{ required: true, message: '请输入目标状态', trigger: 'blur' }],
+  attributeType: [{ required: true, message: '请输入属性类型', trigger: 'blur' }]
+})
 
 const tableData = ref([])
 const page = ref(1)

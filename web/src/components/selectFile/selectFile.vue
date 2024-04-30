@@ -43,7 +43,6 @@ const props = defineProps({
 
 const path = ref(import.meta.env.VITE_BASE_API)
 
-const userStore = useUserStore()
 const fullscreenLoading = ref(false)
 
 const fileList = ref(props.modelValue)

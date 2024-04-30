@@ -29,6 +29,7 @@ func Routers() *gin.Engine {
 	InstallPlugin(Router) // 安装插件
 	systemRouter := router.RouterGroupApp.System
 	cmdbRouter := router.RouterGroupApp.Cmdb
+	exampleRouter := router.RouterGroupApp.Upload
 	// 如果想要不使用nginx代理前端网页，可以修改 web/.env.production 下的
 	// VUE_APP_BASE_API = /
 	// VUE_APP_BASE_PATH = http://localhost
@@ -70,6 +71,7 @@ func Routers() *gin.Engine {
 		systemRouter.InitCasbinRouter(PrivateGroup)             // 权限相关路由
 		systemRouter.InitAuthorityRouter(PrivateGroup)          // 注册角色路由
 		systemRouter.InitSysOperationRecordRouter(PrivateGroup) // 操作记录
+		exampleRouter.InitFileUploadAndDownloadRouter(PrivateGroup)
 
 	}
 	global.GVA_LOG.Info("router register success")

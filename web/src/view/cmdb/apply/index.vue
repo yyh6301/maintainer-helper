@@ -149,11 +149,14 @@
     >
 
       <el-form
-        :model="dialogForm"
+        ref="dialogForm"
+        :rules="rules"
+        :model="form"
         label-width="80px"
       >
         <div style="display: flex">
           <el-form-item
+            prop="clusterName"
             label="客户名"
           >
             <el-input
@@ -164,6 +167,7 @@
 
           <el-form-item
             label="厂商"
+            prop="cloudType"
             style="width:30%"
           >
             <el-select
@@ -229,6 +233,10 @@ import { useUserStore } from '@/pinia/modules/user'
 import { formatDate } from '@/utils/format'
 
 const userStore = useUserStore()
+const rules = ref({
+  clusterName: [{ required: true, message: '请输入客户名称', trigger: 'blur' }],
+  cloudType: [{ required: true, message: '请输入云厂商', trigger: 'blur' }],
+})
 
 const CloudTypeOption = ref([{
   value: '腾讯云'
@@ -315,20 +323,24 @@ const closeDialog = () => {
 }
 
 const enterDialog = () => {
-  vFormRef.value.getFormData().then(async(formData) => {
-    form.value.applyer = userStore.userInfo.userName
-    form.value.workFlowOrder.orderDetail = JSON.stringify(formData)
-    console.log(form.value)
-    const res = await createApply(form.value)
-    if (res.code === 0) {
-      ElMessage.success(res.msg)
-    } else {
-      ElMessage.warning(res.msg)
+  dialogForm.value.validate((valiad) => {
+    if (valiad) {
+      vFormRef.value.getFormData().then(async(formData) => {
+        form.value.applyer = userStore.userInfo.userName
+        form.value.workFlowOrder.orderDetail = JSON.stringify(formData)
+        console.log(form.value)
+        const res = await createApply(form.value)
+        if (res.code === 0) {
+          ElMessage.success(res.msg)
+        } else {
+          ElMessage.warning(res.msg)
+        }
+        getTableData()
+        closeDialog()
+      }).catch(error => {
+        ElMessage.error(error)
+      })
     }
-    getTableData()
-    closeDialog()
-  }).catch(error => {
-    ElMessage.error(error)
   })
 }
 

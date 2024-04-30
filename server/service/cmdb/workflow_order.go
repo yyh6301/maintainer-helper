@@ -62,7 +62,7 @@ func (w WorkFlowOrderService) GetOrderList(order cmdb.WorkFlowOrder, handler str
 	// 联表查询templateID，获取模板名称
 	db = db.Preload("WorkFlowTemplate")
 	db = db.Preload("WorkFlowStatus")
-	err = db.Limit(limit).Offset(offset).Find(&templateList).Error
+	err = db.Limit(limit).Offset(offset).Order("created_at DESC").Find(&templateList).Error
 	if err != nil {
 		return nil, 0, err
 	}

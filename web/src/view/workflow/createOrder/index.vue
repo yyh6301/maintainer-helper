@@ -29,8 +29,15 @@
         {{ currentTemplate.flowName }}
       </el-tag>
 
-      <el-form>
-        <el-form-item label="标题">
+      <el-form
+
+        :model="orderData"
+        :rules="rules"
+      >
+        <el-form-item
+          label="标题"
+          prop="title"
+        >
           <el-input
             v-model="orderData.title"
             placeholder="请输入工单标题"
@@ -68,11 +75,16 @@ import {
 import { VFormRender } from 'vform3-builds'
 import { useUserStore } from '@/pinia/modules/user'
 import { ElMessage } from 'element-plus'
-
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const userStore = useUserStore()
 const cardList = ref([])
 const dialogVisible = ref(false)
 const currentTemplate = ref({})
+
+const rules = ref({
+  title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+})
 
 const formJson = reactive({ 'widgetList': [], 'formConfig': { 'modelName': 'formData', 'refName': 'vForm', 'rulesName': 'rules', 'labelWidth': 80, 'labelPosition': 'left', 'size': '', 'labelAlign': 'label-left-align', 'cssCode': '', 'customClass': '', 'functions': '', 'layoutType': 'PC', 'jsonVersion': 3, 'onFormCreated': '', 'onFormMounted': '', 'onFormDataChange': '', 'onFormValidate': '' }})
 
@@ -112,16 +124,18 @@ const handleCardClick = (template) => {
 getCardList()
 
 const submitForm = (currentTemplate) => {
-  vFormRef.value.getFormData().then(formData => {
+  vFormRef.value.getFormData().then(async(formData) => {
     orderData.value.templateID = currentTemplate.ID
     orderData.value.orderDetail = JSON.stringify(formData)
     orderData.value.orderCreator = userStore.userInfo.userName
     orderData.value.orderModifier = userStore.userInfo.userName
     console.log('order Data:', orderData.value)
     console.log('userInfo', userStore.userInfo)
-    const res = createWorkflowOrder(orderData.value)
+    const res = await createWorkflowOrder(orderData.value)
+    console.log('res:', res)
     if (res.code === 0) {
       ElMessage.success('工单创建成功')
+      router.push({ name: 'allOrder' })
     }
   }).catch(error => {
     // Form Validation failed
